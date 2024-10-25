@@ -1,0 +1,84 @@
+﻿@{
+    @using in_houseLPIWeb.Data
+    @using in_houseLPIWeb.Utilities
+    @inject WebDbContext _db
+    var name = User.Identity.Name;
+    var userRole = _db.Users.Where(u => u.Name == name).Select(u => u.UserLevel).FirstOrDefault();
+    bool isLogin = User.Identity.IsAuthenticated;
+
+    bool homepageAccess = false;
+    bool utilDashAccess = false;
+    bool rfpUtilDashAccess = false;
+    bool rfpDashAccess = false;
+    bool ifcIndexAccess = false;
+    bool genArchiveAccess = false;
+    bool storeInfoAccess = false;
+    bool userEditAccess = false;
+
+    if (isLogin)
+    {
+        homepageAccess = PagePermission.HasAccess(_db, name, "Index");
+        utilDashAccess = PagePermission.HasAccess(_db, name, "Util_Dash");
+        rfpUtilDashAccess = PagePermission.HasAccess(_db, name, "RFPutil_Dash");
+        rfpDashAccess = PagePermission.HasAccess(_db, name, "RFP_Dash");
+        ifcIndexAccess = PagePermission.HasAccess(_db, name, "IFC_Index");
+        genArchiveAccess = PagePermission.HasAccess(_db, name, "Archive");
+        storeInfoAccess = PagePermission.HasAccess(_db, name, "Util_Store_Index");
+        userEditAccess = PagePermission.HasAccess(_db, name, "Util_User_Index");
+
+        if (userRole.Equals("0"))
+        {
+            rfpUtilDashAccess = false;
+        }
+    }
+
+    if (utilDashAccess && (storeInfoAccess || userEditAccess))
+    {
+        storeInfoAccess = false;
+        userEditAccess = false;
+    }
+
+}
+
+<nav class="sticky-top">
+    @if (isLogin)
+    {
+    <ul class="navbar-nav flex-grow-1">
+        <li class="nav-item">
+            <a class="nav-link text-dark @(homepageAccess ? "" : "d-none disabled")" asp-area="" asp-page="/Index">Home</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark @(utilDashAccess ? "" : "d-none disabled")" asp-area="" asp-page="/adminSetup/admDashboard">Utility</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark @(rfpUtilDashAccess ? "" : "d-none disabled")" asp-area="" asp-page="/adminSetup/admRFPUtil_Dashboard">RFP Utility</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark @(storeInfoAccess ? "" : "d-none disabled")" asp-area="" asp-page="/adminSetup/admStore_Index">Store Info</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark @(userEditAccess ? "" : "d-none disabled")" asp-area="" asp-page="/adminSetup/admUser_Index">User Level</a>
+        </li>
+        <li class="nav-item  menu rfpMenu">
+            <a class="nav-link text-dark @(rfpDashAccess ? "" : "d-none disabled")" asp-area="" asp-page="/RFP/rfpDashboard">RFP</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark @(ifcIndexAccess ? "" : "d-none disabled")" asp-area="" asp-page="/IFC/ifcIndex">IFC</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link text-dark @(genArchiveAccess ? "" : "d-none disabled")" asp-area="" asp-page="/Archive">Archive</a>
+        </li>
+    </ul>
+    }
+
+    else
+    {
+        <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+            <ul class="navbar-nav flex-grow-1">
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                </li>
+            </ul>
+        </div>
+    }
+</nav>

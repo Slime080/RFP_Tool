@@ -1,0 +1,160 @@
+﻿@page
+@model in_houseLPIWeb.Pages.IFC.ifcIndexModel
+@{
+    ViewData["Title"] = "IFC View Index";
+}
+
+<partial name="_Notification" />
+
+<style>
+    .dataTables_wrapper .dataTables_filter input,
+    .dataTables_wrapper .dataTables_length select,
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        font-size: 12px;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+        font-size: 14px;
+    }
+
+    .dataTables_wrapper table.dataTable thead th,
+    .dataTables_wrapper table.dataTable tbody td {
+        font-size: 14px;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row py-3">
+        <div class="col-4 align-self-center">
+            <input readonly hidden value="@(Model.ifcViewAccess ? "true" : "false")" id="accessTF" /> <!-- NOTE: This line will be used for the javascript. -->
+            <h2 class="text-primary">IFC View</h2>
+        </div>
+        <div class="col-3 align-self-center">
+            <span>Select Created Date:</span>
+            <select class="form-control" id="CoverDateSelect" name="CoverDateSelect">
+                <option value="0">This Month</option>
+                <option value="-1">Last Month</option>
+                <option value="1">Next Month</option>
+                <option value="-2">Last 2 Months</option>
+                <option value="-3">Last 3 Months</option>
+                <option value="-4">Last 4 Months</option>
+                <option value="-5">Last 5 Months</option>
+                <option value="-6">Last 6 Month</option>
+                <option value="-7">Last 7 Months</option>
+                <option value="-8">Last 8 Months</option>
+                <option value="-9">Last 9 Months</option>
+                <option value="-10">Last 10 Months</option>
+                <option value="-11">Last 11 Months</option>
+                <option value="-12">Last Year</option>
+                <option value="-24">Last 2 Years</option>
+                <option value="-36">Last 3 Years</option>
+            </select>
+        </div>
+        <div class="col-3 align-self-center">
+            <span>Search From Available Store Name:</span>
+            <select class="form-control" id="searchSelect" asp-items="Model.cbChargeTo">
+                <option value=""></option>
+            </select>
+            @*<input type="text" id="searchInput" placeholder="Search..." />*@
+        </div>
+        <div class="col-2 align-self-center text-center">
+            <a asp-page-handler="ExportToExcel" id="exportLink" class="btn btn-primary @(Model.ifcViewAccess ? "" : "disabled")">Export to Excel</a>
+        </div>
+    </div>
+
+    @*TEST view from stored procedure*@
+
+    <div class="table-responsive overflow-auto" style="height: 65vh;">
+        <table class="table table-bordered table-striped table-hover" id="ifcTable">
+            <thead class="text-center align-middle">
+                <tr>
+                    <th>RFP NUMBER</th>
+                    <th>STORE NAME</th>
+                    <th>STORE TYPE</th>
+                    <th>OPEN DATE</th>
+                    <th>COVER START&nbsp;DATE</th>
+                    <th>COVER END&nbsp;DATE</th>
+                    <th>TYPE OF CHARGES</th>
+                    <th>GROSS AMOUNT</th>
+                    <th>VAT&nbsp;%</th>
+                    <th>VAT AMOUNT</th>
+                    <th>BASIC AMOUNT</th>
+                    <th>WHT&nbsp;%</th>
+                    <th>WHT AMOUNT</th>
+                    <th>NET AMOUNT</th>
+                    <th>PRORATION RESULT</th>
+                    <th>PRORATION DAYS</th>
+                    <th>PRORATION DIVIDENT</th>
+                    <th>IFC PRORATION&nbsp;%</th>
+                    <th>LPI PRORATION&nbsp;%</th>
+                    <th>MATRIX&nbsp;AMOUNT RESULT</th>
+                    <th>IFC&nbsp;AMOUNT PARTICIPATION</th>
+                    <th>LPI&nbsp;AMOUNT PARTICIPATION</th>
+                    <th>MATRIX VAT&nbsp;RESULT</th>
+                    <th>IFC MATRIX VAT&nbsp;RESULT</th>
+                    <th>LPI MATRIX VAT&nbsp;RESULT</th>
+                    <th>TOTAL IFC PARTICIPATION</th>
+                    <th>TOTAL LPI PARTICIPATION</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.ifcViewData != null)
+                {
+                    @foreach (var obj in Model.ifcViewData)
+                    {
+                        <tr>
+                            <td>@obj.RFP_No</td>
+                            <td>@obj.ChargeTo</td>
+                            <td>@obj.StoreType</td>
+                            <td>@obj.OpenDate</td>
+                            <td>@obj.CoverStartDate</td>
+                            <td>@obj.CoverEndDate</td>
+                            <td>@obj.ToC</td>
+                            <td>@obj.GrossAmt</td>
+                            <td>@obj.VATPerc</td>
+                            <td>@obj.VATAmt</td>
+                            <td>@obj.BasicAmt</td>
+                            <td>@obj.WHTPerc</td>
+                            <td>@obj.WHTAmt</td>
+                            <td>@obj.NETAmt</td>
+                            <td>@obj.ProrateResult</td>
+                            <td>@obj.ProrateDays</td>
+                            <td>@obj.ProrateDivident</td>
+                            <td>@obj.IFCProratePerc</td>
+                            <td>@obj.LPIProratePerc</td>
+                            <td>@obj.MatrixAmtResult</td>
+                            <td>@obj.IFCPartAmt</td>
+                            <td>@obj.LPIPartAmt</td>
+                            <td>@obj.MatrixVATResult</td>
+                            <td>@obj.IFCMatrixVat</td>
+                            <td>@obj.LPIMatrixVat</td>
+                            <td>@obj.TotalIFCPart</td>
+                            <td>@obj.TotalLPIPart</td>
+                            <td><a type="button" asp-page="/RFP/rfpEdit" asp-route-id="@obj.RFP_No" class="btn btn-outline-info @(Model.ifcViewAccess ? "" : "disabled")">Edit RFP</a></td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+
+</div>
+
+@section Scripts {
+    <script src="~/js/fetchDataTable.js" defer></script>
+
+    @*THIS IS FOR EXPORT USING THE SELECT ELEMENT VALUES*@
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var exportLink = document.getElementById('exportLink');
+            exportLink.addEventListener('click', function () {
+                var selectElement = document.getElementById('CoverDateSelect');
+                var selectedValue = selectElement.value;
+                exportLink.href = '/IFC/ifcIndex?handler=ExportToExcel&param=' + selectedValue;
+            });
+        });
+    </script>
+
+}

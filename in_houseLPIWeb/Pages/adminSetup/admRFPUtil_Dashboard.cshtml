@@ -1,0 +1,35 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admRFPUtil_DashboardModel
+@{
+    ViewData["Title"] = "RFP Utility Dashboard";
+}
+
+<div class="text-center">
+    <h1>Request for Payment System Utilities</h1>
+</div>
+
+<div class="container">
+    <div class="text-center">
+        <p>This is the RFP Dashboard. It provides an overview of all the available utilities for the RFP.</p>
+    </div>
+    <br />
+    <hr />
+    <br />
+    <div class="row">
+        <div class="col-6 border-right text-center d-flex justify-content-center">
+            <div>
+                <h3>Payee List</h3>
+                <p>This section allows you to add payee to the list.</p>
+                <a class="btn btn-link @(Model.payeeIndexAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admRFPPayee_Index">>> go to Payee List</a>
+            </div>
+        </div>
+        <div class="col-6 text-center d-flex justify-content-center">
+            <div>
+                <h3>Type of Charge List</h3>
+                <p>This section allows you to add type of charge to the list.</p>
+                <a class="btn btn-link @(Model.tocIndexAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admRFPTOC_Index">>> go to Type of Charges List</a>
+            </div>
+        </div>
+    </div>
+
+</div>

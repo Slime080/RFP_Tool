@@ -1,0 +1,53 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admStoreType_EditModel
+@{
+    ViewData["Title"] = "Edit Store Type details";
+}
+
+<div class="container-fluid">
+    @{ ViewData["menuId"] = "rfpUtilMenu"; }
+    @await Html.PartialAsync("_PartialMenuView")
+</div>
+
+<div class="container-fluid justify-content-center">
+    <form method="post">
+        <input hidden asp-for="StoreTypes.Id" />
+        <div class="border p-3 mt-4">
+            <div class="row pb-2">
+                <h2 class="text-primary pl-3">Edit Store Type</h2>
+                <hr />
+            </div>
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="mb-3">
+                <label asp-for="StoreTypes.TypeCode"></label>
+                <input asp-for="StoreTypes.TypeCode" class="form-control" readonly />
+                <span asp-validation-for="StoreTypes.TypeCode" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="StoreTypes.TypeName"></label>
+                <input asp-for="StoreTypes.TypeName" class="form-control" readonly />
+                <span asp-validation-for="StoreTypes.TypeName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="StoreTypes.TypeDescription"></label>
+                <input asp-for="StoreTypes.TypeDescription" class="form-control" />
+                <span asp-validation-for="StoreTypes.TypeDescription" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="switch">
+                    <input type="checkbox" asp-for="StoreTypes.IsActive" id="toggleSwitch" readonly>
+                    <span class="slider round"></span>
+                </label>
+                <label class="form-check-label" for="toggleSwitch">Active</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a asp-page="/adminSetup/admStoreType_Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+} <!-- Used to add the _ValidationScriptsPartial.cshtml -->

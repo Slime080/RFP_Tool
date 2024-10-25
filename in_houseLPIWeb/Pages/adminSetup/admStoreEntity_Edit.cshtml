@@ -1,0 +1,48 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admStoreEntity_EditModel
+@{
+    ViewData["Title"] = "Edit Entity details";
+}
+
+<div class="container-fluid">
+    @{ ViewData["menuId"] = "rfpUtilMenu"; }
+    @await Html.PartialAsync("_PartialMenuView")
+</div>
+
+<div class="container-fluid justify-content-center">
+    <form method="post">
+        <input hidden asp-for="Entities.Id" />
+        <div class="border p-3 mt-4">
+            <div class="row pb-2">
+                <h2 class="text-primary pl-3">Edit Store Entity</h2>
+                <hr />
+            </div>
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="mb-3">
+                <label asp-for="Entities.EntityCode"></label>
+                <input asp-for="Entities.EntityCode" class="form-control" readonly />
+                <span asp-validation-for="Entities.EntityCode" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Entities.EntityName"></label>
+                <input asp-for="Entities.EntityName" class="form-control" />
+                <span asp-validation-for="Entities.EntityName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="switch">
+                    <input type="checkbox" asp-for="Entities.IsActive" id="toggleSwitch" readonly />
+                    <span class="slider round"></span>
+                </label>
+                <label class="form-check-label" for="toggleSwitch">Active</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a asp-page="/adminSetup/admStoreEntity_Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+} <!-- Used to add the _ValidationScriptsPartial.cshtml -->

@@ -1,0 +1,119 @@
+﻿@{
+    var menuId = ViewData["menuId"] as string;
+
+    @using in_houseLPIWeb.Data
+    @using in_houseLPIWeb.Utilities
+    @inject WebDbContext _db
+    var name = User.Identity.Name;
+    var userRole = _db.Users.Where(u => u.Name == name).Select(u => u.UserLevel).FirstOrDefault();
+    bool isLogin = User.Identity.IsAuthenticated;
+
+    bool homepageAccess = false;
+    bool utilDashAccess = false;
+    bool rfpUtilDashAccess = false;
+    bool payeeListAccess = false;
+    bool tocListAccess = false;
+    bool rfpDashAccess = false;
+    bool rfpLilstAccess = false;
+    bool rfpAddAccess = false;
+    bool storeInfoAccess = false;
+    bool userEditAccess = false;
+    bool deptEditAccess = false;
+
+    if (isLogin)
+    {
+        homepageAccess = PagePermission.HasAccess(_db, name, "Index");
+        utilDashAccess = PagePermission.HasAccess(_db, name, "Util_Dash");
+        rfpUtilDashAccess = PagePermission.HasAccess(_db, name, "RFPutil_Dash");
+        payeeListAccess = PagePermission.HasAccess(_db, name, "RFPutil_Payee_Index");
+        tocListAccess = PagePermission.HasAccess(_db, name, "RFPutil_TOC_Index");
+        rfpDashAccess = PagePermission.HasAccess(_db, name, "RFP_Dash");
+        rfpLilstAccess = PagePermission.HasAccess(_db, name, "RFP_Index");
+        rfpAddAccess = PagePermission.HasAccess(_db, name, "RFP_Add");
+        storeInfoAccess = PagePermission.HasAccess(_db, name, "Util_Store_Index");
+        userEditAccess = PagePermission.HasAccess(_db, name, "Util_User_Index");
+        deptEditAccess = PagePermission.HasAccess(_db, name, "Util_UserDep_Index");
+
+    }
+
+}
+
+@if (menuId == "adminMenu")
+{
+    <!-- This container is for Admin Navigation -->
+
+    <div class="text-wrap pb-3">
+        <div class="row justify-content-center">
+            <div class=" col-1 border-bottom"></div>
+            <div class="col-2 pb-3 text-center border-bottom border-right">
+                <a class="text-decoration-none text-black-50 @(utilDashAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admDashboard">Dashboard</a>
+            </div>
+            <div class="col-2 pb-3 text-center border-bottom border-right">
+                <a class="text-decoration-none text-black-50 @(userEditAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admUser_Index">Users</a>
+            </div>
+            <div class="col-2 pb-3 text-center border-bottom border-right">
+                <a class="text-decoration-none text-black-50 @(deptEditAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admUserDep_Index">Departments</a>
+            </div>
+            <div class="col-2 pb-3 text-center border-bottom border-right">
+                <a class="text-decoration-none text-black-50 @(storeInfoAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admStore_Index">Stores</a>
+            </div>
+            <div class="col-2 pb-3 text-center border-bottom">
+                <a class="text-decoration-none text-black-50 @(rfpUtilDashAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admRFPUtil_Dashboard">RFP Utils</a>
+            </div>
+            <div class="col-1 border-bottom"></div>
+        </div>
+    </div>
+
+}
+
+else if (menuId == "utilMenu")
+{
+    <!-- This container is for Admin Navigation -->
+
+    <div class="text-wrap pb-3">
+        <div class="row justify-content-center">
+            <div class="col-4 pb-3 text-center border-bottom border-right">
+                <a class="text-decoration-none text-black-50 @(userEditAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admUser_Index">Users</a>
+            </div>
+            <div class="col-4 pb-3 text-center border-bottom border-right">
+                <a class="text-decoration-none text-black-50 @(deptEditAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admUserDep_Index">Departments</a>
+            </div>
+            <div class="col-4 pb-3 text-center border-bottom">
+                <a class="text-decoration-none text-black-50 @(storeInfoAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admStore_Index">Stores</a>
+            </div>
+        </div>
+    </div>
+
+}
+
+else if (menuId == "rfpUtilMenu")
+{
+    <!-- This container is for RFT Menu Navigation -->
+
+    <div class="text-wrap pb-3" id="rfpUtilMenu">
+        <div class="row justify-content-center">
+            <div class="col-6 pb-3 text-center border-bottom border-right">
+                <a class="text-decoration-none text-black-50 @(payeeListAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admRFPPayee_Index">Payee List</a>
+            </div>
+            <div class="col-6 pb-3 text-center border-bottom">
+                <a class="text-decoration-none text-black-50 @(tocListAccess ? "" : "disabled")" asp-area="" asp-page="/adminSetup/admRFPTOC_Index">Type of Charge List</a>
+            </div>
+        </div>
+    </div>
+}
+
+else if (menuId == "rfpMenu")
+{
+    <!-- This container is for RFT Menu Navigation -->
+
+    <div class="text-wrap pb-3" id="rfpUtilMenu">
+        <div class="row justify-content-center">
+            <div class="col-6 pb-3 text-center border-bottom border-right">
+                <a class="text-decoration-none text-black-50 @(rfpLilstAccess ? "" : "disabled")" asp-area="" asp-page="/RFP/rfpIndex">View All RFP</a>
+            </div>
+            <div class="col-6 pb-3 text-center border-bottom">
+                <a class="text-decoration-none text-black-50 @(rfpAddAccess ? "" : "disabled")" asp-area="" asp-page="/RFP/rfpAdd">Create New RFP</a>
+            </div>
+        </div>
+    </div>
+}

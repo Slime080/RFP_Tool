@@ -1,0 +1,526 @@
+﻿@page
+@model in_houseLPIWeb.Pages.RFP.rfpPrintViewModel
+@using in_houseLPIWeb.Utilities
+@{
+    string formattedRFP_No = $"LAWHO-{Model.rfpFormx.RFP_No + 1000000}";
+    ViewData["Title"] = "Request for Payment No. " + formattedRFP_No;
+    int payeeCount = Model.rfpFormx.Payee.Length;
+    int rowCount = Model.PoPLists.Count();
+}
+
+<style>
+    .print-body, .print-container {
+        font-family: 'Arial', sans-serif; /* Use Arial as the preferred font for the entire body */
+    }
+
+    .table td, .table th {
+        padding: 0.1rem; /* Adjust the padding value as needed */
+        word-wrap: break-word; /* Standard syntax */
+        overflow-wrap: break-word; /* Alternative syntax */
+    }
+</style>
+
+<div class="container-fluid" id="no-print">
+    <div class="d-grid gap-2 d-md-block text-right">
+        <a type="button" id="lEdit" asp-page="/RFP/rfpView" asp-route-id="@Model.RFP_Nox" class="btn btn-outline-secondary mx-2">Cancel</a>
+        <button id="QckPrintBtn" class="btn btn-outline-primary" @(Model.rfpPrintAccess ? "" : "disabled")>Quick Print</button>
+        <button class="btn btn-outline-secondary mx-2" data-toggle="modal" data-target="#printChoiceModal" @(Model.rfpPrintAccess ? "" : "disabled")>Print Setup</button>
+    </div>
+</div>
+
+<div class="print-body">
+    <!-- Company Information -->
+    <div class="container-fluid print-container">
+        <h1 style="font-size: 20px;">Lawson Philippines Inc.,</h1>
+        <p style="margin: auto; font-size: 10px;">HEAD OFFICE: 11th Flr., Office Tower, Times Plaza Building, United Nation Ave. - Manila</p>
+        <p style="margin: auto; font-size: 10px;">TELEPHONE NO# 742-4836</p>
+    </div>
+
+    <!-- Request Header -->
+    <div class="container-fluid text-right print-container">
+        <p class="mb-0">RFP NO. <b><u>@formattedRFP_No</u></b></p>
+    </div>
+
+    <!-- Border header for Request for Payment Form -->
+    <div class="container-fluid text-center" style="border: 1px solid black; height: 25px;">
+        <span class="font-weight-bolder align-middle">REQUEST FOR PAYMENT FORM</span>
+    </div>
+
+    <!-- Payee and Request Date -->
+    <div class="container-fluid print-container" style="border: 1px solid black; height: 50px;">
+        <div class="row">
+            <div class="col-6">
+                <div>PAYEE:</div>
+            </div>
+            <div class="col-6 text-right">
+                <div>DATE REQUESTED:</div>
+            </div>
+        </div>
+        <div class="row">
+            @if (payeeCount > 75)
+            {
+                <div class="col-11 pr-0">
+                    <div class="font-weight-bold ml-1" style="font-size: 13px; line-height: 1;"> @(Model.rfpFormx.Payee) </div>
+                </div>
+                <div class="col-1 p-0" style="margin-left: -5px;">
+                    <div class="font-weight-bold"> @(DateTime.Now.ToString("MM/dd/yyyy")) </div>
+                </div>
+            }
+            else
+            {
+                <div class="col-9 pr-0">
+                    <div class="font-weight-bold ml-5"> @(Model.rfpFormx.Payee) </div>
+                </div>
+                <div class="col-3 p-0">
+                    <div class="font-weight-bold ml-5"> @(DateTime.Now.ToString("MM/dd/yyyy")) </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <!-- Mode of payment, type of payment -->
+    <div class="container-fluid print-container" style="border: 1px solid black; height: 50px;">
+        <div class="row">
+            <div class="col-4">
+                <div>MODE OF PAYMENT:</div>
+                <div class="font-weight-bold ml-5"> @(Model.rfpFormx.MoP) </div>
+            </div>
+            <div class="col-4 text-center">
+                <div>TYPE OF PAYMENT:</div>
+                <div class="font-weight-bold ml-5"> @(Model.rfpFormx.ToP) </div>
+            </div>
+            <div class="col-4 text-right">
+                <div>DUE DATE:</div>
+                <div class="font-weight-bold ml-5"> @(Model.rfpFormx.DueDate.ToString("MM/dd/yyyy")) </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Amount information -->
+    <div class="container-fluid print-container" style="border: 1px solid black; height: 75px;">
+        <div class="row">
+            <div class="col-4">
+                <div>AMOUNT IN FIGURES:</div>
+                <div class="font-weight-bold ml-5">
+                    @*@(Model.CurrencyQ) @String.Format("{0:N}", Convert.ToDecimal(Model.Amtx))*@
+                    @if (!string.IsNullOrEmpty(Model.Amtx) && decimal.TryParse(Model.Amtx, out decimal amt))
+                    {
+                        @String.Format("{0:N}", amt)
+                    }
+                </div>
+            </div>
+            <div class="col-8">
+                <div style="margin-left: 135px;">AMOUNT IN WORDS:</div>
+                <div class="font-weight-bold ml-5" style="line-height:1;"> @(Model.Wordx) </div>
+            </div>
+        </div>
+    </div>
+
+    @if (rowCount < 4 && Model.withLineBreak)
+    {
+        <!-- Payment information section -->
+        <div class="container-fluid px-0 print-container" style="border: 1px solid black; height: 250px;">
+            <div class="ml-3">PURPOSE OF PAYMENT:</div>
+            <div class="container-fluid px-0 mx-0">
+                <table class="table text-center py-0 mx-auto">
+                    <thead>
+                        <tr>
+                            <th class="ChargeTo-column"> Charge To </th>
+                            <th class="DueDate-column"> Due Date </th>
+                            <th class="CSD-column"> Cover Start Date </th>
+                            <th class="CED-column"> Cover End Date </th>
+                            <th class="OR-column"> OR # </th>
+                            <th class="DR-column"> DR # </th>
+                            <th class="SI-column"> SI # </th>
+                            <th class="ServiceInvoice-column"> Service Invoice# </th>
+                            <th class="PO-column"> PO # </th>
+                            <th class="Basic-column"> Basic Amt </th>
+                            <th class="VAT-column"> VAT % </th>
+                            <th class="VAT-column"> VAT Amt </th>
+                            <th class="Gross-column"> Gross Amt </th>
+                            <th class="WHT-column"> WHT % </th>
+                            <th class="WHT-column"> WHT Amt </th>
+                            <th class="Net-column"> Net Amt </th>
+                            <th class="Remarks-column text-left"> Remarks </th>
+                            <th class="ToC-column text-left"> Type of Charge </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model.InitialRows)
+                        {
+                            <tr>
+                                <td class="ChargeTo-column"><i>@obj.ChargeTo</i></td>
+                                <td class="DueDate-column"><i>@((obj.DueDate != null) ? obj.DueDate.Value.ToString("MM/dd/yyyy") : "")</i></td>
+                                <td class="CSD-column"><i>@obj.CoverStartDate.ToString("MM/dd/yyyy")</i></td>
+                                <td class="CED-column"><i>@obj.CoverEndDate.ToString("MM/dd/yyyy")</i></td>
+                                <td class="OR-column"><i>@obj.OR_Number</i></td>
+                                <td class="DR-column"><i>@obj.DR_Number</i></td>
+                                <td class="SI-column"><i>@obj.SI_Number</i></td>
+                                <td class="ServiceInvoice-column"><i>@obj.ServiceInvoice</i></td>
+                                <td class="PO-column"><i>@obj.PO_Number</i></td>
+                                <td class="Basic-column"><i>@Mathify.getBasicAmt(obj.Amount, obj.VATPercent).ToString("N")</i></td>
+                                <td class="VAT-column"><i>@obj.VATPercent</i></td>
+                                <td class="VAT-column"><i></i>@Mathify.getVATAmt(obj.Amount, obj.VATPercent).ToString("N")</td>
+                                <td class="Gross-column"><i>@obj.Amount.ToString("N")</i></td>
+                                <td class="WHT-column"><i>@obj.WHTPercent</i></td>
+                                <td class="WHT-column"><i>@Mathify.getWHTAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</i></td>
+                                <td class="Net-column"><i>@Mathify.getNETAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</i></td>
+                                <td class="Remarks-column text-left"><i>@obj.Remarks</i></td>
+                                <td class="ToC-column text-left"><i>@obj.ToC</i></td>
+                            </tr>
+                        }
+                        @if (Model.PoPLists.Count() <= 5)
+                        {
+                            <tr class="page-num">
+                                <td colspan="17">
+                                    <p class="mb-0" style="margin: auto; font-size: 10px;">** Note: Nothing Follows. **</p>
+                                    <span class="float-right" id="pageCount" style="margin: auto; font-size: 10px;"></span>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr class="page-num">
+                                <td colspan="17">
+                                    <p class="mb-0" style="margin: auto; font-size: 10px;">** Note: Continued on next page(s). Please see attached file(s). **</p>
+                                    <span class="float-right" id="pageCount" style="margin: auto; font-size: 10px;"></span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Remarks line -->
+        <div class="container-fluid print-container" style="border: 1px solid black; height: 150px;">
+            <div>REMARKS:</div>
+            <p class="font-weight-bold ml-5" style="white-space: pre-wrap;"> @(Model.rfpFormx.Remarks) </p>
+        </div>
+    }
+    else
+    {
+        <!-- Payment information section -->
+        <div class="container-fluid px-0 print-container" style="border: 1px solid black; height: 350px;">
+            <div class="ml-3">PURPOSE OF PAYMENT:</div>
+            <div class="container-fluid px-0 mx-0">
+                <table class="table text-center py-0 mx-auto">
+                    <thead>
+                        <tr>
+@*                             <th class="Id">Purpose Id</th>
+ *@                            <th class="ChargeTo-column"> Charge To </th>
+                            <th class="DueDate-column"> Due Date </th>
+                            <th class="CSD-column"> Cover Start Date </th>
+                            <th class="CED-column"> Cover End Date </th>
+                            <th class="OR-column"> OR # </th>
+                            <th class="DR-column"> DR # </th>
+                            <th class="SI-column"> SI # </th>
+                            <th class="ServiceInvoice-column"> Service Invoice# </th>
+                            <th class="PO-column"> PO # </th>
+                            <th class="Basic-column"> Basic Amt </th>
+                            <th class="VAT-column"> VAT % </th>
+                            <th class="VAT-column"> VAT Amt </th>
+                            <th class="Gross-column"> Gross Amt </th>
+                            <th class="WHT-column"> WHT % </th>
+                            <th class="WHT-column"> WHT Amt </th>
+                            <th class="Net-column"> Net Amt </th>
+                            <th class="Remarks-column text-left"> Remarks </th>
+                            <th class="ToC-column text-left"> Type of Charge </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var obj in Model.InitialRows)
+                        {
+                            <tr>
+@*                                 <td class="ChargeTo-column"><i>@obj.Id</i></td>
+ *@                                <td class="ChargeTo-column"><i>@obj.ChargeTo</i></td>
+                                <td class="DueDate-column"><i>@((obj.DueDate != null) ? obj.DueDate.Value.ToString("MM/dd/yyyy") : "")</i></td>
+                                <td class="CSD-column"><i>@obj.CoverStartDate.ToString("MM/dd/yyyy")</i></td>
+                                <td class="CED-column"><i>@obj.CoverEndDate.ToString("MM/dd/yyyy")</i></td>
+                                <td class="OR-column"><i>@obj.OR_Number</i></td>
+                                <td class="DR-column"><i>@obj.DR_Number</i></td>
+                                <td class="SI-column"><i>@obj.SI_Number</i></td>
+                                <td class="ServiceInvoice-column"><i>@obj.ServiceInvoice</i></td>
+                                <td class="PO-column"><i>@obj.PO_Number</i></td>
+                                <td class="Basic-column"><i>@Mathify.getBasicAmt(obj.Amount, obj.VATPercent).ToString("N")</i></td>
+                                <td class="VAT-column"><i>@obj.VATPercent</i></td>
+                                <td class="VAT-column"><i></i>@Mathify.getVATAmt(obj.Amount, obj.VATPercent).ToString("N")</td>
+                                <td class="Gross-column"><i>@obj.Amount.ToString("N")</i></td>
+                                <td class="WHT-column"><i>@obj.WHTPercent</i></td>
+                                <td class="WHT-column"><i>@Mathify.getWHTAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</i></td>
+                                <td class="Net-column"><i>@Mathify.getNETAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</i></td>
+                                <td class="Remarks-column text-left"><i>@obj.Remarks</i></td>
+                                <td class="ToC-column text-left"><i>@obj.ToC</i></td>
+                            </tr>
+                        }
+                        @if (Model.PoPLists.Count() <= 5)
+                        {
+                            <tr class="page-num">
+                                <td colspan="17">
+                                    <p class="mb-0" style="margin: auto; font-size: 10px;">** Note: Nothing Follows. **</p>
+                                    <span class="float-right" id="pageCount" style="margin: auto; font-size: 10px;"></span>
+                                </td>
+                            </tr>
+                        }
+                        else
+                        {
+                            <tr class="page-num">
+                                <td colspan="17">
+                                    <p class="mb-0" style="margin: auto; font-size: 10px;">** Note: Continued on next page(s). Please see attached file(s). **</p>
+                                    <span class="float-right" id="pageCount" style="margin: auto; font-size: 10px;"></span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Remarks line -->
+        <div class="container-fluid print-container" style="border: 1px solid black; height: 50px;">
+            <div>REMARKS:</div>
+            <p class="font-weight-bold ml-5" style="white-space: pre-wrap; line-height:1;"> @(Model.rfpFormx.Remarks) </p>
+        </div>
+    }
+
+    <!-- Signatories section -->
+    <div class="container-fluid first-page" style="border: 1px solid black; height: 115px;">
+        <p style="margin: auto; font-size: 10px;">Note: Original signature provided only on the first pages. No signature required in between pages.</p>
+        <div class="row">
+            <div class="col-3">
+                <div>REQUESTED BY:</div><br>
+                <div class="font-weight-bold"> @Model.fullName </div>
+                <div class="font-weight-bold small"> (@(Model.userInfox.ToUpper()) DEPARTMENT)</div>
+            </div>
+            <div class="col-3">
+                <div>CHECKED BY:</div><br>
+                <div class="font-weight-bold"> @(Model.rfpFormx.Checked.ToUpper()) </div>
+            </div>
+            <div class="col-3">
+                <div>NOTED BY:</div><br>
+                <div class="font-weight-bold"> @(Model.rfpFormx.Noted.ToUpper()) </div>
+            </div>
+            <div class="col-3">
+                <div>APPROVED BY:</div><br>
+                <div class="font-weight-bold"> @(Model.rfpFormx.Approved.ToUpper()) </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- This is for next page Payment information section -->
+@if (Model.RemainingRows.Any())
+{
+    @for (int i = 0; i < Model.TotalPages - 1; i++)
+    {
+        <div class="next-page">
+            <!-- Company Information -->
+            <div class="container-fluid print-container">
+                <h1 style="font-size: 20px;">Lawson Philippines Inc.,</h1>
+                <p style="margin: auto; font-size: 10px;">HEAD OFFICE: 11th Flr., Office Tower, Times Plaza Building, United Nation Ave. - Manila</p>
+                <p style="margin: auto; font-size: 10px;">TELEPHONE NO# 742-4836</p>
+            </div>
+
+            <!-- Request Header -->
+            <div class="container-fluid text-right print-container">
+                <p class="mb-0">RFP NO. <b><u>@formattedRFP_No</u></b></p>
+            </div>
+
+            <!-- Border header for Request for Payment Form -->
+            <div class="container-fluid text-center" style="border: 1px solid black; height: 25px;">
+                <span class="font-weight-bolder align-middle">REQUEST FOR PAYMENT FORM</span>
+            </div>
+
+            <div class="container-fluid px-0 print-container" style="border: 1px solid black; height: 1165px;">
+                <div class="ml-3">PURPOSE OF PAYMENT: <i>[continuation]</i></div>
+                <div class="container-fluid">
+                    <table class="table text-center py-0 mx-auto">
+                        <thead>
+                            <tr>
+                                <th class="ChargeTo-column"> Charge To </th>
+                                <th class="DueDate-column"> Due Date </th>
+                                <th class="CSD-column"> Cover Start Date </th>
+                                <th class="CED-column"> Cover End Date </th>
+                                <th class="OR-column"> OR # </th>
+                                <th class="DR-column"> DR # </th>
+                                <th class="SI-column"> SI # </th>
+                                <th class="ServiceInvoice-column"> Service Invoice# </th>
+                                <th class="PO-column"> PO # </th>
+                                <th class="Basic-column"> Basic Amt </th>
+                                <th class="VAT-column"> VAT % </th>
+                                <th class="VAT-column"> VAT Amt </th>
+                                <th class="Gross-column"> Gross Amt </th>
+                                <th class="WHT-column"> WHT % </th>
+                                <th class="WHT-column"> WHT Amt </th>
+                                <th class="Net-column"> Net Amt </th>
+                                <th class="Remarks-column text-left"> Remarks </th>
+                                <th class="ToC-column text-left"> Type of Charge </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @for (int j = 0; j < Model.rowsPerPage && ((i * Model.rowsPerPage) + j) < Model.RemainingRows.Count; j++)
+                            {
+                                var obj = Model.RemainingRows[(i * Model.rowsPerPage) + j];
+                                <tr>
+                                    <td class="ChargeTo-column"><i>@obj.ChargeTo</i></td>
+                                    <td class="DueDate-column"><i>@((obj.DueDate != null) ? obj.DueDate.Value.ToString("MM/dd/yyyy") : "")</i></td>
+                                    <td class="CSD-column"><i>@obj.CoverStartDate.ToString("MM/dd/yyyy")</i></td>
+                                    <td class="CED-column"><i>@obj.CoverEndDate.ToString("MM/dd/yyyy")</i></td>
+                                    <td class="OR-column"><i>@obj.OR_Number</i></td>
+                                    <td class="DR-column"><i>@obj.DR_Number</i></td>
+                                    <td class="SI-column"><i>@obj.SI_Number</i></td>
+                                    <td class="ServiceInvoice-column"><i>@obj.ServiceInvoice</i></td>
+                                    <td class="PO-column"><i>@obj.PO_Number</i></td>
+                                    <td class="Basic-column"><i>@Mathify.getBasicAmt(obj.Amount, obj.VATPercent).ToString("N")</i></td>
+                                    <td class="VAT-column"><i>@obj.VATPercent</i></td>
+                                    <td class="VAT-column"><i></i>@Mathify.getVATAmt(obj.Amount, obj.VATPercent).ToString("N")</td>
+                                    <td class="Gross-column"><i>@obj.Amount.ToString("N")</i></td>
+                                    <td class="WHT-column"><i>@obj.WHTPercent</i></td>
+                                    <td class="WHT-column"><i>@Mathify.getWHTAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</i></td>
+                                    <td class="Net-column"><i>@Mathify.getNETAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</i></td>
+                                    <td class="Remarks-column text-left"><i>@obj.Remarks</i></td>
+                                    <td class="ToC-column text-left"><i>@obj.ToC</i></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="page-num">
+                @if (i + 2 < Model.TotalPages)
+                {
+                    <p class="mb-0" style="margin: auto; font-size: 10px;">** Note: Continued on next page(s). Check for page numbers. **</p>
+                }
+                else
+                {
+                    <p class="mb-0" style="margin: auto; font-size: 10px;">** Note: Nothing Follows. **</p>
+                }
+                <span class="float-right" style="margin: auto; font-size: 10px;">Page @(i + 2) of @(Model.TotalPages)</span>
+            </div>
+
+        </div>
+    }
+}
+
+<!-- Container for modal dialog of print setup -->
+<div class="modal fade" id="printChoiceModal" tabindex="-1" role="dialog" aria-labelledby="printChoiceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="printChoiceModalLabel">PRINT OPTION</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post">
+                    <div class="container-fluid border">
+                        <div class="row">
+                            <div class="col-6">
+
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="OR">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="OR">OR Number</label>
+                                </div>
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="DR">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="DR">DR Number</label>
+                                </div>
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="SI">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="SI">SI # / Service #</label>
+                                </div>
+                               @*  <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="ServiceInvoice"> <!-- Updated ID -->
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="ServiceInvoice">Service Invoice</label> <!-- Updated 'for' attribute -->
+                                </div> *@
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="PO">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="PO">PO Number</label>
+                                </div>
+
+                            </div>
+
+                            <div class="col-6">
+
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="VAT">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="VAT">VAT</label>
+                                </div>
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="WHT">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="WHT">With Holding Tax</label>
+                                </div>
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="Net" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="Net">Net Amount</label>
+                                </div>
+                                <br />
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="DueDate">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="DueDate">Due Date</label>
+                                </div>
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="Remarks">
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="Remarks">Remarks</label>
+                                </div>
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="CSD" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="CSD">Cover Start Date</label>
+                                </div>
+                                <div class="my-2">
+                                    <label class="switch">
+                                        <input type="checkbox" id="CED" checked>
+                                        <span class="slider round"></span>
+                                    </label>
+                                    <label class="form-check-label px-3" for="CED">Cover End Date</label>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="PrintBtn" class="btn btn-outline-info">Print</button> <!-- ID is used for optionalPrintSetup.js -->
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script defer src="~/js/optionalPrintSetup.js"></script>
+}

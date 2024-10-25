@@ -1,0 +1,22 @@
+﻿@if (TempData["Success"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        toastr.success('@TempData["Success"]');
+        console.log('Success:', '@TempData["Success"]');
+    });
+    </script>
+}
+@if (TempData["Error"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/toastr.js/toastr.min.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        toastr.error('@TempData["Error"]');
+        console.log('Error:', '@TempData["Error"]');
+    });
+    </script>
+}

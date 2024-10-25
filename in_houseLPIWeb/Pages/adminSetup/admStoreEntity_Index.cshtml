@@ -1,0 +1,90 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admStoreEntity_IndexModel
+@{
+    ViewData["Title"] = "Store Entity Index";
+}
+
+<partial name="_Notification" />
+
+@if (Model.userRole == "0")
+{
+    <div class="container-fluid">
+        @{ ViewData["menuId"] = "adminMenu"; }
+        @await Html.PartialAsync("_PartialMenuView")
+    </div>
+}
+
+<div class="container-fluid">
+    <div class="row pt-3">
+        <div class="col-6">
+            <h2 class="text-primary">Store Entity List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <button class="btn btn-primary mx-2" data-toggle="modal" data-target="#addEntityModal" @(Model.admin ? "" : "disabled")>Add New Entity</button>
+        </div>
+    </div>
+    <div class="pb-3">
+        <a class="text-decoration-none text-black-50" asp-area="" asp-page="/adminSetup/admStore_Index">Back to Stores</a>
+        <span> | </span>
+        <span>Customize:</span>
+        @if (Model.typeEditAccess)
+        {
+            <a class="text-decoration-none text-black-50" asp-area="" asp-page="/adminSetup/admStoreType_Index">Store Type</a>
+        }
+        else
+        {
+            <span class="text-black-50">Store Type</span>
+        }
+    </div>
+    <table class="table table-bordered table-striped table-hover" id="entityTable">
+        <thead>
+            <tr>
+                <th>
+                    Entity Code
+                </th>
+                <th>
+                    Entity Name
+                </th>
+                <th>
+                    Active Entity
+                </th>
+                <th>
+                    Operation Controls
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model.EntityList)
+            {
+                <tr>
+                    <td width="30%">@obj.EntityCode</td>
+                    <td width="40%">@obj.EntityName</td>
+                    <td width="10%">@(obj.IsActive ? "Yes" : "No")</td>
+                    <td width="15%">
+                        <div class="d-grid gap-2 d-md-block text-center">
+                            <a asp-page="/adminSetup/admStoreEntity_Edit" asp-route-id="@obj.Id" class="btn btn-outline-info @(Model.entEditAccess ? "" : "disabled")">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <partial name="admStoreEntity_Add_" />
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#entityTable').DataTable({
+                "initComplete": function (settings, json) {
+                    $('.dataTables_filter input').attr('id', 'search-input');
+                }
+            });
+        });
+    </script>
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+} <!-- Used to add the _ValidationScriptsPartial.cshtml -->

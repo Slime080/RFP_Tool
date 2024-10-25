@@ -1,0 +1,77 @@
+﻿/*Created by Kurt 8/30/2024*/
+/* Start of table css */
+.table-container {
+    width: 500px;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+    .table-container th,
+    .table-container td {
+        padding: 8px;
+        text-align: center; /* Center text in table cells */
+        border-bottom: 1px solid #ddd;
+        white-space: nowrap;
+    }
+
+    .table-container th {
+        background-color: #5B99C2;
+        color: #fff;
+        font-weight: bold;
+        border-bottom: 2px solid #ccc;
+        border-right: 1px solid #fff;
+        vertical-align: middle;
+    }
+
+        .table-container th:not(:last-child) {
+            border-right: 1px solid #ccc;
+        }
+
+    .table-container td {
+        border-right: 1px solid #ddd;
+    }
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+.col-10 {
+    padding: 0;
+    text-align: center;
+    margin-bottom: 50px; /* Decrease margin to move up */
+    margin-top: 50px; /* Decrease margin to move up */
+    padding-right: 20px;
+}
+
+
+/* End of table css */
+
+.gray-container {
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 1px solid #dee2e6;
+}
+
+    .gray-container .form-control {
+        border-radius: 4px;
+        border: 1px solid #ced4da;
+        background-color: #ffffff;
+    }
+
+    .gray-container .label {
+        font-weight: bold;
+        color: #495057;
+    }
+.btn.disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.disabled-icon {
+    color: #d9534f; /* Red color for the icon */
+    margin-right: 5px; /* Space between the icon and text */
+}
+

@@ -1,0 +1,46 @@
+﻿.gray-container {
+    background-color: #D1E9F6; /* Light gray background */
+    padding: 20px; /* Padding inside the container */
+    border-radius: 10px; /* More rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-bottom: 20px; /* Space below the container */
+}
+
+    .gray-container .form-control {
+        border-radius: 5px; /* Rounded corners for inputs */
+        border: 1px solid #ccc; /* Light border for inputs */
+    }
+
+        .gray-container .form-control:focus {
+            border-color: #5B99C2; /* Change border color on focus */
+            box-shadow: 0 0 0 0.2rem rgba(91, 153, 194, 0.25); /* Add shadow on focus */
+        }
+
+    .gray-container label {
+        font-weight: bold; /* Bold labels */
+        margin-bottom: 5px; /* Space below labels */
+    }
+
+    .gray-container .row {
+        margin-bottom: 15px; /* Space between rows */
+    }
+
+        .gray-container .row .col-4,
+        .gray-container .row .col-8 {
+            padding-right: 15px; /* Space between columns */
+        }
+
+        .gray-container .row .col-8 {
+            padding-left: 15px; /* Space between columns */
+        }
+
+    .gray-container .btn {
+        margin-right: 10px; /* Space between buttons */
+    }
+
+.page-title {
+    color: #0033A0; /* Lawson blue color or your specific shade */
+}
+.text-primar{
+    text-align:center;
+}

@@ -1,0 +1,58 @@
+﻿@page
+@model in_houseLPIWeb.Pages.ArchiveModel
+@{
+    ViewData["Title"] = "Archive Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Archive Page</h1>
+    <p>This page serves as the central dashboard for all archived information from RFP.</p>
+</div>
+
+<div class="pb-1">
+    <h3 class="mt-2">Archived RFP</h3>
+    <table class="table table-container table-hover text-center my-2 py-0 mx-auto" id="rfpTB">
+        <thead>
+            <tr>
+                <th>RFP #</th>
+                <th>Payee</th>
+                <th>Remarks</th>
+                <th>Created by</th>
+                <th>Date Created</th>
+                <th>Operation Controls</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.RFPList != null && Model.RFPList.Any())
+            {
+                @foreach (var obj in Model.RFPList.Where(e => e.IsActive == false))
+                {
+                    <tr>
+                        <td width="15%">LAWHO-@((int)obj.RFP_No + 1000000)</td>
+                        <td width="25%">@obj.Payee</td>
+                        <td width="20%">@obj.Remarks</td>
+                        <td width="10%">@obj.CreatedBy</td>
+                        <td width="15%">@obj.CreatedDate</td>
+                        <td width="15%">
+                            <div class="d-grid gap-2 d-md-block text-center">
+                                <a asp-page="/RFP/rfpActivate" asp-route-id="@obj.RFP_No" class="btn btn-outline-info @(Model.rfpActvtAccess ? "" : "disabled")">Unarchive</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#rfpTB').DataTable({
+                "initComplete": function (settings, json) {
+                    $('#rfpTB_filter input').attr('id', 'search-rfp');
+                }
+            });
+        });
+    </script>
+}

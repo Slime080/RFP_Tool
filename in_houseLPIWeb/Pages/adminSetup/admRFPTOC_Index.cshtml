@@ -1,0 +1,74 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admRFPTOC_IndexModel
+@{
+    ViewData["Title"] = "Type of Charge Index";
+}
+
+<partial name="_Notification" />
+
+<div class="container-fluid">
+    @{ ViewData["menuId"] = "rfpUtilMenu"; }
+    @await Html.PartialAsync("_PartialMenuView")
+</div>
+
+<div class="container-fluid">
+    <div class="row pt-3">
+        <div class="col-6">
+            <h2 class="text-primary">Type of Charge List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <button class="btn btn-primary mx-2" data-toggle="modal" data-target="#addTOCModal">Add New Type of Charge</button>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped table-hover" id="tocTable">
+        <thead>
+            <tr>
+                <th>
+                    Type of Charge
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Active Charge
+                </th>
+                <th>
+                    Operation Controls
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model.TOCList)
+            {
+                <tr>
+                    <td width="35%">@obj.TOCName</td>
+                    <td width="35%">@obj.TOCdescription</td>
+                    <td width="15">@(obj.IsArchived ? "No" : "Yes")</td>
+                    <td width="15%">
+                        <div class="d-grid gap-2 d-md-block text-center">
+                            <a asp-page="/adminSetup/admRFPTOC_Edit" asp-route-id="@obj.Id" class="btn btn-outline-info @(Model.tocEditAccess ? "" : "disabled")">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <partial name="admRFPTOC_Add_" />
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#tocTable').DataTable({
+                "initComplete": function (settings, json) {
+                    $('.dataTables_filter input').attr('id', 'search-input');
+                }
+            });
+        });
+    </script>
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+} <!-- Used to add the _ValidationScriptsPartial.cshtml -->

@@ -1,0 +1,228 @@
+﻿@page
+@model in_houseLPIWeb.Pages.RFP.rfpAddModel
+@using in_houseLPIWeb.Utilities;
+@{
+    ViewData["Title"] = "Create New Request for Payment";
+    Model.OnGet();
+    ViewData["GeneratePopCode"] = Model.GeneratedPopCode;
+}
+<link href="~/css/rfp.css" rel="stylesheet" />
+<partial name="_Notification" />
+<link rel="stylesheet" href="https://unpkg.com/choices.js/public/assets/styles/choices.min.css">
+<script src="https://unpkg.com/choices.js/public/assets/scripts/choices.min.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Choices.js on the Type of Charges dropdown
+        var typeOfChargesElement = document.getElementById('Payee');
+        if (typeOfChargesElement) {
+            new Choices(typeOfChargesElement, {
+                searchEnabled: true,
+                searchResultLimit: 10,
+                itemSelectText: '',
+                placeholder: true,
+                placeholderValue: 'Select Type of Charge'
+            });
+        }
+    });
+</script>
+
+@* Edited by kurt *@
+<div class="container-fluid px-0">
+
+     <div class="container-fluid pt-1">
+        <form method="post" enctype="multipart/form-data" asp-page-handler="AddRFP">
+            <div class="left-aligned-form mt-4 bg-light p-4 border border-secondary rounded shadow-sm">
+                <h2 class="text-center">Request For Payment</h2>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="rfpNo" class="font-weight-bold">RFP NO:</label>
+                        <input class="form-control form-control-sm" id="rfpNo" readonly />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="Payee" class="font-weight-bold">PAYEE:</label>
+                        <select class="form-control form-control-sm text-uppercase" id="Payee" asp-for="rfpFormx.Payee" asp-items="@Model.cbPayees">
+                            <option value="">- Select Payee -</option>
+                        </select>
+                        <span asp-validation-for="rfpFormx.Payee" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="DueDate" class="font-weight-bold">DUE DATE:</label>
+                        <input asp-for="rfpFormx.DueDate" type="date" class="form-control form-control-sm" />
+                        <span asp-validation-for="rfpFormx.DueDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="MoP" class="font-weight-bold">MODE OF PAYMENT:</label>
+                        <select class="form-control form-control-sm" id="MoP" asp-for="rfpFormx.MoP" asp-items="@Model.cbMoPs">
+                        </select>
+                        <span asp-validation-for="rfpFormx.MoP" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="ToP" class="font-weight-bold">TYPE OF PAYMENT:</label>
+                        <select class="form-control form-control-sm" id="ToP" asp-for="rfpFormx.ToP">
+                            <option value="FULL">FULL</option>
+                            <option value="PARTIAL">PARTIAL</option>
+                        </select>
+                        <span asp-validation-for="rfpFormx.ToP" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-5">
+                    <div class="col-md-4">
+                        <h5 style="color: #FF0000; font-weight: bold;">Before you start, please insert the Purpose of Payment:</h5>
+                        <label for="PopCode" class="font-weight-bold">PURPOSE OF PAYMENT:</label>
+                        <button data-toggle="modal" data-target="#popModal" type="button" class="btn btn-outline-primary btn-sm" style="width: 100%;"><b>Input Purpose of Payment</b></button>
+                    </div>
+                    <div class="col-md-8">
+                        <input class="form-control form-control-sm" type="text" id="PopCode" asp-for="rfpFormx.PoPCode" value="@Model.GeneratedPopCode" readonly hidden>
+                    </div>
+                </div>
+                @* This is for the dynamic section of the page *@
+                <h2 class="text-right"></h2>
+                <div id="dynamicContent">
+
+                    <div class="table-container" style="width: 100%; max-height: 400px; overflow-y: auto;">
+                        <div class="table-scroll" style="position: relative;">
+                            <table class="table table-hover text-center my-2 py-0 mx-auto">
+                                <thead>
+                                    <tr>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">Charge To</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">Due Date</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">Cover Start Date</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">Cover End Date</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">OR #</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">DR #</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">SI # / Service Invoice</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">PO #</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">Basic Amt</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">VAT %</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">VAT Amt</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">Gross Amt</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">WHT %</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">WHT Amt</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">Net Amt</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">Remarks</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">Type of Charge</th>
+                                        <th style="position: sticky; top: 0; background-color: #5B99C2; z-index: 10;">Operation Controls</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (Model.PoPLists != null && Model.PoPLists.Any())
+                                    {
+                                        @foreach (var obj in Model.PoPLists)
+                                        {
+                                            <tr>
+                                                <td>@obj.ChargeTo</td>
+                                                <td>@((obj.DueDate != null) ? obj.DueDate.Value.ToString("MM/dd/yyyy") : "")</td>
+                                                <td>@obj.CoverStartDate.ToString("MM/dd/yyyy")</td>
+                                                <td>@obj.CoverEndDate.ToString("MM/dd/yyyy")</td>
+                                                <td>@obj.OR_Number</td>
+                                                <td>@obj.DR_Number</td>
+                                                <td>@obj.SI_Number</td>
+                                                <td>@obj.PO_Number</td>
+                                                <td>@Mathify.getBasicAmt(obj.Amount, obj.VATPercent).ToString("N")</td>
+                                                <td>@obj.VATPercent</td>
+                                                <td>@Mathify.getVATAmt(obj.Amount, obj.VATPercent).ToString("N")</td>
+                                                <td>@obj.Amount.ToString("N")</td>
+                                                <td>@obj.WHTPercent</td>
+                                                <td>@Mathify.getWHTAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</td>
+                                                <td>@Mathify.getNETAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</td>
+                                                <td>@obj.Remarks</td>
+                                                <td>@obj.ToC</td>
+                                                <td>
+                                                    <div class="d-grid gap-2 d-md-block text-center">
+                                                        <a asp-page="/RFP/popEdit" asp-route-id="@obj.Id" class="btn btn-outline-info" hidden>Edit</a>
+                                                        @if (Model.userRole == "0" || Model.userRole != "" || new[] { "-0", "-1" }.Any(level => Model.userRole.Contains(level)))
+                                                        {
+                                                            <a asp-page="/RFP/popDelete" asp-route-id="@obj.Id" class="redirect-link btn btn-outline-danger" hidden>Delete</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <a asp-page="/RFP/popDelete" asp-route-id="@obj.Id" class="redirect-link btn btn-outline-secondary disabled" hidden>Delete</a>
+                                                        }
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <tr>
+                                            <td colspan="18" style="text-align: center; vertical-align: middle;">
+                                                <p><b>No Purpose of Payment found</b></p>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+            @*This end for the RFP tags*@
+
+
+         
+
+            <!-- Container for Type of Charge -->
+            <div class="bg-light p-3 ms-2 border border-secondary rounded-3 shadow-sm mt-4">
+            <div id="secAmt">
+                <div>
+                    @Html.Raw(Model.GeneratedHtml)
+                </div>
+            </div>
+
+            <div id="signContent">
+                <div>
+                    @Html.Raw(Model.GeneratedSign)
+                </div>
+            </div>
+            <div class="row align-items-left mt-4">
+                <div class="col-2 px-0">
+                    <div class="align-self-end">
+                        <p class="text-right my-2 pr-1" style="margin-top:8px;"><b>REMARKS:</b></p>
+                    </div>
+                </div>
+                <div class="col-6 px-0">
+                    <textarea id="remarks" class="form-control py-0" asp-for="rfpFormx.Remarks" rows="2" placeholder="Add any optional remarks or instructions for the RFP here."></textarea>
+                </div>
+                <div class="d-grid gap-2 d-md-block text-right pt-2 pl-2">
+            @*         <button type="submit" class="btn btn-primary">Save</button> *@
+                        <button type="submit" id="saveButton" class="btn btn-primary">Save</button>
+
+                    <a asp-page="/RFP/rfpDashboard" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <!-- Render the partial view and pass data -->
+    @await Html.PartialAsync("rfpAddDialog_", ViewData)
+</div>
+
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+
+ <script>
+    var ent= @Html.Raw(Json.Serialize(ViewData["StoreName"]));
+</script>
+    
+    <script src="~/js/fetchChargePopEdit.js"></script>
+    <script defer src="~/js/functionHandler.js"></script>
+    <script defer src="~/js/taxFunction.js"></script>
+ <script src="~/js/confirmation.js"></script>
+
+
+
+}

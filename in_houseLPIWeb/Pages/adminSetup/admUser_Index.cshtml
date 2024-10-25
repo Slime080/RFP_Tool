@@ -1,0 +1,104 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admUser_IndexModel
+@{
+    ViewData["Title"] = "User List Index";
+}
+
+<partial name="_Notification" />
+
+@if (Model.userRole == "0")
+{
+    <div class="container-fluid">
+        @{ ViewData["menuId"] = "adminMenu"; }
+        @await Html.PartialAsync("_PartialMenuView")
+    </div>
+}
+else
+{
+    <div class="container-fluid">
+        @{ ViewData["menuId"] = "utilMenu"; }
+        @await Html.PartialAsync("_PartialMenuView")
+    </div>
+}
+
+<div class="container-fluid">
+    <div class="row py-3">
+        <div class="col-6">
+            <h2 class="text-primary">Users List</h2>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped" id="userTable">
+        <thead>
+            <tr>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Department
+                </th>
+                <th>
+                    Role
+                </th>
+                <th>
+                    Active User
+                </th>
+                <th>
+                    Operation Controls
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Users != null)
+            {
+                @foreach (var obj in Model.Users)
+                {
+                    <tr>
+                        <td>@obj.Email</td>
+                        <td>@obj.Name</td>
+                        <td>@obj.Department</td>
+                        <td>@Model.GetUserLevelText(obj.UserLevel)</td>
+                        <td>@(obj.isActive ? "Yes" : "No")</td>
+                        <td width="15%">
+                            <div class="d-grid gap-2 d-md-block text-center">
+                                @if (Model.userRole == "0" || new[] { "-0", "-1" }.Any(level => Model.userRole.Contains(level)))
+                                {
+                                    <a asp-page="/adminSetup/admUser_Edit" asp-route-id="@obj.Id" class="btn btn-outline-info @(Model.userEditAccess ? "" : "disabled")">
+                                        Edit
+                                    </a>
+                                    <a asp-page="/adminSetup/admPermission_Edit" asp-route-id="@obj.Id" class="btn btn-outline-dark @(Model.pageAccessEdit ? "" : "disabled")">
+                                        Access
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a asp-page="/adminSetup/admUser_Edit" asp-route-id="@obj.Id" class="btn btn-outline-info @(Model.userEditAccess ? "" : "disabled")">
+                                        Edit
+                                    </a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#userTable').DataTable({
+                "initComplete": function (settings, json) {
+                    $('.dataTables_filter input').attr('id', 'search-input');
+                }
+            });
+        });
+    </script>
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

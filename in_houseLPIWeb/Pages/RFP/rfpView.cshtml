@@ -1,0 +1,230 @@
+﻿@page
+@model in_houseLPIWeb.Pages.RFP.rfpViewModel
+@using in_houseLPIWeb.Utilities 
+@{
+    ViewData["Title"] = "View Request for Payment No. " + Model.RFP_Nox;
+    string formattedRFP_No = $"LAWHO-{Model.rfpFormx.RFP_No + 1000000}";
+    var message = TempData["Message"] as string;
+}
+
+<link href="~/css/rfpview.css" rel="stylesheet" />
+
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert alert-warning alert-dismissible fade show mt-3" role="alert">
+        @message
+       
+    </div>
+}
+
+<partial name="_Notification" />
+@* Edited by kurt *@
+<div class="container-fluid"> 
+    @{ ViewData["menuId"] = "rfpMenu"; }
+    @await Html.PartialAsync("_PartialMenuView")
+</div>
+
+<div class="container-fluid px-0">
+    <div class="row">
+        <div class="col-6">
+           
+        </div>
+        <div class="col-6">
+            <div class="d-grid gap-2  d-md-block text-right">
+                <a type="button" id="lEdit" asp-page="/RFP/rfpIndex" class="btn btn-outline-secondary @(Model.rfpViewAccess ? "Closed" : "disabled")">Back</a>
+                <a type="button" id="lEdit" asp-page="/RFP/rfpEdit" asp-route-id="@Model.RFP_Nox"
+                   class="btn btn-outline-primary @(Model.rfpEditAccess && Model.rfpFormx.Status != "Closed" ? "" : "disabled")">
+                    @(Model.rfpEditAccess && Model.rfpFormx.Status != "Closed" ? "Edit RFP" : "🔒 Edit Lock")
+                </a>
+
+                <a type="button" asp-page="/RFP/rfpPrintView" asp-route-id="@Model.RFP_Nox" class="btn btn-outline-info @(Model.rfpPrintAccess ? "" : "disabled")">Print/Generate RFP</a>
+                @if (Model.userRole == "0" || new[] { "-0", "-1" }.Any(level => Model.userRole.Contains(level)))
+                {
+                    <a type="button" id="lArchive" asp-page="/RFP/rfpArchive" asp-route-id="@Model.RFP_Nox" class="btn btn-outline-danger @(Model.rfpArchiveAccess ? "" : "disabled")">Archive</a>
+                }
+                else
+                {
+                    <a type="button" id="lArchive" asp-page="/RFP/rfpArchive" asp-route-id="@Model.RFP_Nox" class="btn btn-outline-danger @(Model.rfpArchiveAccess ? "" : "disabled")">Archive</a>
+                }
+            </div>
+        </div>
+    </div>
+    <div class="text-center">
+        <h2>Request For Payment</h2>
+    </div>
+    <div class="container-fluid pt-2">
+        <form method="post">
+            <input hidden asp-for="rfpFormx.RFP_No" />
+            <input hidden id="reqP" value="@User.Identity.Name" />
+            <input hidden id="userDept" value="@Model.userInfox" />
+            <input class="form-control py-0" id="dToday" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly hidden />
+            <input class="form-control py-0" id="createdDate" value="@Model.rfpFormx.CreatedDate" readonly hidden />
+          
+                <br />
+            <div class="container mt-4 bg-light p-4 border border-secondary rounded shadow-sm">
+                <div class="row align-items-center pb-2">
+                    <div class="col-2 px-0">
+                        <p class="label mb-0">RFP NO:</p>
+                    </div>
+                    <div class="col-4 px-0">
+                        <input class="form-control py-0" id="rfpNo" value="@formattedRFP_No" readonly />
+                    </div>
+                    <div class="col-2 px-1">
+                        <p class="label mb-0">PAYEE:</p>
+                    </div>
+                    <div class="col-4 px-0">
+                        <input class="form-control py-0" id="payeeP" asp-for="rfpFormx.Payee" readonly />
+                    </div>
+                </div>
+
+                <div class="row align-items-center pb-2">
+                    <div class="col-2 px-1">
+                        <p class="label mb-0">DUE DATE:</p>
+                    </div>
+                    <div class="col-4 px-0">
+                        <input asp-for="rfpFormx.DueDate" type="date" class="form-control" readonly />
+                    </div>
+                    <div class="col-2 px-1">
+                        <p class="label mb-0">MODE OF PAYMENT:</p>
+                    </div>
+                    <div class="col-4 px-0">
+                        <input class="form-control py-0" id="mopP" asp-for="rfpFormx.MoP" readonly />
+                    </div>
+                    <div class="col-2 px-1">
+                        <p class="label mb-0" hidden>Status</p>
+                    </div>
+                    <div class="col-4 px-0">
+                        <input class="form-control py-0" id="mopP" asp-for="rfpFormx.Status" readonly hidden />
+                    </div>
+                </div>
+
+
+                <div class="row align-items-center pb-2">
+                    <div class="col-2 px-1">
+                        <p class="label mb-0">TYPE OF PAYMENT:</p>
+                    </div>
+                    <div class="col-4 px-0">
+                        <input class="form-control py-0" id="topP" asp-for="rfpFormx.ToP" readonly />
+                    </div>
+                </div>
+            </div>
+                <div class="col-2 px-0">
+                    <div class="align-self-end">
+                        @* <p class="text-right my-2 pr-1" style="margin-top:8px;">PURPOSE OF PAYMENT:</p> *@ 
+                        <input class="form-control py-0" id="PoPCode" asp-for="rfpFormx.PoPCode" readonly hidden />
+                    </div>
+                </div>
+                <br />
+   @*          <div class="col-10 px-0 overflow-auto"> *@
+                <div class="table-scroll">
+                    <table class="table-container my-1">
+                        <thead>
+                            <tr>
+                                <th>Charge To</th>
+                                <th>APV</th>
+                                <th>APV Posted Date</th>
+                                <th>CDJ</th>
+                                <th>CDJ Posted Date</th>
+                                <th>Due Date</th>
+                                <th>Cover Start Date</th>
+                                <th>Cover End Date</th>
+                                <th>OR #</th>
+                                <th>DR #</th>
+                                <th>SI # / Service Invoice</th>
+                      @*           <th>Service Invoice #</th> *@
+                                <th>PO #</th>
+                                <th>Basic Amt</th>
+                                <th>VAT %</th>
+                                <th>VAT Amount</th>
+                                <th>Gross Amt</th>
+                                <th>WHT %</th>
+                                <th>WHT Amt</th>
+                                <th>Net Amt</th>
+                                <th>Remarks</th>
+                                <th>Type of Charge</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.PoPLists != null)
+                            {
+                                @foreach (var obj in Model.PoPLists)
+                                {
+                                    <tr>
+                                    <td hidden><i>@obj.Status</i></td>
+                                        <td><i>@obj.ChargeTo</i></td>
+                                        <td><i>@obj.Ap_Voucher</i></td>
+                                        <td><i>@obj.Ap_Voucher_Posted_Date</i></td>
+                                        <td><i>@obj.Cdj_Number</i></td>
+                                        <td><i>@obj.CDJ_Num_Posted_Date</i></td>
+                                        <td><i>@((obj.DueDate != null) ? obj.DueDate.Value.ToString("MM/dd/yyyy") : "")</i></td>
+                                        <td><i>@obj.CoverStartDate.ToString("MM/dd/yyyy")</i></td>
+                                        <td><i>@obj.CoverEndDate.ToString("MM/dd/yyyy")</i></td>
+                                        <td><i>@obj.OR_Number</i></td>
+                                        <td><i>@obj.DR_Number</i></td>
+                                        <td><i>@obj.SI_Number</i></td>
+                                     @*    <td><i>@obj.ServiceInvoice</i></td> *@
+                                        <td><i>@obj.PO_Number</i></td>
+                                        <td><i>@Mathify.getBasicAmt(obj.Amount, obj.VATPercent).ToString("N")</i></td>
+                                        <td><i>@obj.VATPercent</i></td>
+                                        <td><i>@Mathify.getVATAmt(obj.Amount, obj.VATPercent).ToString("N")</i></td>
+                                        <td><i>@obj.Amount.ToString("N")</i></td>
+                                        <td><i>@obj.WHTPercent</i></td>
+                                        <td><i>@Mathify.getWHTAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</i></td>
+                                        <td><i>@Mathify.getNETAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</i></td>
+                                        <td><i>@obj.Remarks</i></td>
+                                        <td><i>@obj.ToC</i></td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="17">
+                                        <p>No Purpose of Payment found.</p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+           @*  </div> *@
+            <!-- Container for Amount and Amount in Words -->
+            <div class="container mt-4 bg-light p-4 border border-secondary rounded shadow-sm">
+                <div>
+                    @Html.Raw(Model.GeneratedHtml)
+                </div>
+                <div class="row align-items-center pb-2">
+                    <div class="col-2 px-1 d-flex align-items-center justify-content-end">
+                        <p class="text-right my-2 pr-1"><b>CHECKED BY:</b></p>
+                    </div>
+                    <div class="col-1 d-flex align-items-center justify-content-end" style="flex: 0 0 15%; max-width: 15%; padding: 0;">
+                        <input class="form-control py-0 pr-0 text-uppercase" id="checkP" type="text" asp-for="rfpFormx.Checked" readonly style="width: 100%; padding: 0.1rem 0.2rem;" />
+                    </div>
+                    <div class="col-2 px-1 d-flex align-items-center">
+                        <p class="text-right my-2 pl-1"><b>NOTED BY:</b></p>
+                    </div>
+                    <div class="col-2 px-1 d-flex align-items-center">
+                        <input class="form-control py-0 text-uppercase" id="notedP" type="text" asp-for="rfpFormx.Noted" readonly style="width: 100%;" />
+                    </div>
+                    <div class="col-2 px-1 d-flex align-items-center">
+                        <p class="text-right my-2 pr-1"><b>APPROVED BY:</b></p>
+                    </div>
+                    <div class="col-2 px-1 d-flex align-items-center">
+                        <input class="form-control py-0 text-uppercase" id="approvedP" type="text" asp-for="rfpFormx.Approved" readonly style="width: 100%;" />
+                    </div>
+                </div>
+                <div class="row align-items-center">
+                    <div class="col-2 d-flex justify-content-end">
+                     @*    <p class="text-right my-2 pr-3"><b>REMARKS:</b></p> *@
+                        <p class="text-right my-2 pr-10 ml-3" style="margin-top:8px;"><b>REMARKS:</b></p>
+
+
+                    </div>
+                    <div class="col-8 px-1 d-flex align-items-center">
+                        <textarea id="remarks" class="form-control py-0 w-75" asp-for="rfpFormx.Remarks" rows="2" readonly></textarea>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

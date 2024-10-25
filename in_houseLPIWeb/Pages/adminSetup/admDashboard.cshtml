@@ -1,0 +1,108 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admDashboardModel
+@{
+    ViewData["Title"] = "Administrator Dashboard";
+}
+
+<style>
+    .page-title {
+        color: #333;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+
+    .page-description {
+        font-size: 1.125rem;
+        color: #555;
+        margin-bottom: 2rem;
+    }
+
+    .card-container {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        transition: box-shadow 0.3s ease;
+    }
+
+        .card-container:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .card-description {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+
+    .btn-custom {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+
+        .btn-custom:hover {
+            background-color: #0056b3;
+            text-decoration: none;
+        }
+
+    .btn-disabled {
+        background-color: #6c757d;
+        color: #fff;
+        pointer-events: none;
+    }
+
+    .container {
+        max-width: 1200px;
+    }
+</style>
+
+<div class="text-center">
+    <h1 class="page-title">Utility Dashboard</h1>
+</div>
+
+<div class="container">
+    <div class="text-center">
+        <p class="page-description">This is the Utility Dashboard. It provides an overview of all the available utilities for the RFP.</p>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card-container">
+                <h3 class="card-title">User List</h3>
+                <p class="card-description">This section allows you to manage user accounts and permissions.</p>
+                <a class="btn btn-custom @(Model.storeIndexAccess ? "" : "btn-disabled")" asp-area="" asp-page="/adminSetup/admUser_Index"><b>Go to User List</b></a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-container">
+                <h3 class="card-title">Department List</h3>
+                <p class="card-description">This section allows you to manage departments.</p>
+                <a class="btn btn-custom @(Model.deptIndexAccess ? "" : "btn-disabled")" asp-area="" asp-page="/adminSetup/admUserDep_Index"><b>Go to Department List</b></a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card-container">
+                <h3 class="card-title">Store List</h3>
+                <p class="card-description">This section allows you to manage store details and its utilities.</p>
+                <a class="btn btn-custom @(Model.userIndexAcces ? "" : "btn-disabled")" asp-area="" asp-page="/adminSetup/admStore_Index"><b>Go to Store List</b></a>
+            </div>
+        </div>
+    </div>
+</div>

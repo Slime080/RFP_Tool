@@ -1,0 +1,73 @@
+﻿@model in_houseLPIWeb.Pages.adminSetup.admRFPTOC_IndexModel
+
+<div class="modal fade" id="addTOCModal" tabindex="-1" role="dialog" aria-labelledby="addTOCModalLabel" aria-hidden="true">
+    <!-- The id is used in calling the modal dialog -->
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addTOCModalLabel">Add New Type of Charge</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-action="Add">
+                    <!-- Container Type of Charge -->
+                    <div asp-validation-summary="ModelOnly"></div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label asp-for="TOCs.TOCName"></label>
+                            </div>
+                            <div class="col-8">
+                                <input asp-for="TOCs.TOCName" class="form-control" />
+                            </div>
+                        </div>
+                        <span asp-validation-for="TOCs.TOCName" class="text-danger"></span>
+                    </div>
+                    <!-- Container for description -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label asp-for="TOCs.TOCdescription"></label>
+                            </div>
+                            <div class="col-8">
+                                <textarea asp-for="TOCs.TOCdescription" class="form-control" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <span asp-validation-for="TOCs.TOCdescription" class="text-danger"></span>
+                    </div>
+                    <!-- Container for department -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label asp-for="TOCs.TOCDepartment"></label>
+                            </div>
+                            <div class="col-8">
+                                <input asp-for="TOCs.TOCDepartment" class="form-control" value="@Model.udept" readonly />
+                                @*<select asp-for="TOCs.TOCDepartment" asp-items="@Model.Departments" class="form-control">
+                                    <option value="">- Select Department -</option>
+                                </select>*@
+                            </div>
+                        </div>
+                        <span asp-validation-for="TOCs.TOCDepartment" class="text-danger"></span>
+                    </div>
+
+                    <!-- Container for Toggle switch for Payee Status -->
+                    @*<div class="mb-3">
+                        <label class="switch">
+                            <input type="checkbox" asp-for="TOCs.IsArchived" id="toggleSwitch" disabled>
+                            <span class="slider round"></span>
+                        </label>
+                        <label class="form-check-label px-3" for="toggleSwitch">Archived</label>
+                    </div>*@
+
+                    <div class="d-grid gap-2 d-md-block">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

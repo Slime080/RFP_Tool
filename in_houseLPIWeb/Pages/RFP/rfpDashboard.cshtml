@@ -1,0 +1,105 @@
+﻿@page
+@model in_houseLPIWeb.Pages.RFP.rfpDashboardModel
+@{
+    ViewData["Title"] = "RFP Dashboard";
+}
+
+<style>
+    .page-title {
+        color: #333;
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    .page-description {
+        font-size: 1.125rem;
+        color: #555;
+        margin-bottom: 2rem;
+    }
+    .card-container {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 1.5rem;
+        text-align: center;
+        margin-bottom: 2rem;
+        transition: box-shadow 0.3s ease;
+    }
+    .card-container:hover {
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    .card-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+    .card-description {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+    .btn-custom {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 0.5rem 1.5rem;
+        font-size: 1rem;
+        border-radius: 4px;
+        text-decoration: none;
+        display: inline-block;
+        transition: background-color 0.3s ease;
+    }
+    .btn-custom:hover {
+        background-color: #0056b3;
+        text-decoration: none;
+    }
+    .btn-disabled {
+        background-color: #6c757d;
+        color: #fff;
+        pointer-events: none;
+    }
+    .container {
+        max-width: 1200px;
+    }
+
+</style>
+
+<div class="text-center">
+    <h1 class="page-title">Request for Payment System</h1>
+</div>
+
+<div class="container">
+    <div class="text-center">
+        <p class="page-description">This is the RFP Dashboard. It provides an overview of all the available functions for the RFP in the system.</p>
+    </div>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card-container">
+                <h3 class="card-title">RFP List</h3>
+                <p class="card-description">This section allows you to view the list of existing RFPs.</p>
+                <a class="btn btn-custom @(Model.rfpIndexAccess ? "" : "btn-disabled")" asp-area="" asp-page="/RFP/rfpIndex"> <b>View RFP List</b></a>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card-container">
+                <h3 class="card-title">New RFP</h3>
+                <p class="card-description">This section allows you to add a new RFP to the system.</p>
+                <a class="btn btn-custom @(Model.rfpAddAccess ? "" : "btn-disabled")" asp-area="" asp-page="/RFP/rfpAdd"><b>Add New RFP</b></a>
+            </div>
+        </div>
+       <div class="container" style="display: flex; justify-content: center;">
+    <div class="row" style="width: 100%; display: flex; justify-content: center;">
+        <div class="col-md-6" style="text-align: center;">
+            <div class="card-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                        <h3 class="card-title">Extracted Transaction</h3>
+                        <p class="card-description">RFP with CDJ and APV</p>
+                <a class="btn btn-custom @(Model.rfpAddAccess ? "" : "btn-disabled")" asp-area="" asp-page="/RFP/RFPInventory"><b>View Extraction</b></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+    </div>
+</div>

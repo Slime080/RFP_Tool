@@ -1,0 +1,158 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admStore_IndexModel
+
+@{
+    ViewData["Title"] = "Store List Index";
+}
+
+<partial name="_Notification" />
+
+@if (Model.userRole == "0")
+{
+    <div class="container-fluid">
+        @{ ViewData["menuId"] = "adminMenu"; }
+        @await Html.PartialAsync("_PartialMenuView")
+    </div>
+}
+else
+{
+    <div class="container-fluid">
+        @{ ViewData["menuId"] = "utilMenu"; }
+        @await Html.PartialAsync("_PartialMenuView")
+    </div>
+}
+
+<div class="container-fluid">
+    <div class="row pt-3">
+        <div class="col-6">
+            <h2 class="text-primary">Store detail List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <button class="btn btn-primary mx-2" data-toggle="modal" data-target="#addStoreModal">Add New Store</button>
+        </div>
+    </div>
+    <div class="pb-3">
+        <span>Customize:</span>
+        @if (Model.entEditAccess)
+        {
+            <a class="text-decoration-none text-black-50" asp-area="" asp-page="/adminSetup/admStoreEntity_Index">Entity</a>
+        }
+        else
+        {
+            <span class="text-black-50">Entity</span>
+        }
+        <span class="text-black-50"> | </span>
+        @if (Model.typeEditAccess)
+        {
+            <a class="text-decoration-none text-black-50" asp-area="" asp-page="/adminSetup/admStoreType_Index">Store Type</a>
+        }
+        else
+        {
+            <span class="text-black-50">Store Type</span>
+        }
+    </div>
+    <div class="table-responsive overflow-auto">
+        <table class="table table-bordered table-striped table-hover" id="storeTable">
+            <thead>
+                <tr>
+                    <th>
+                        Store Code
+                    </th>
+                    <th>
+                        Entity
+                    </th>
+                    <th>
+                        Store Name
+                    </th>
+                    <th>
+                        Store Type
+                    </th>
+                    <th>
+                        Contract Code
+                    </th>
+                    <th>
+                        Business Name
+                    </th>
+                    <th>
+                        Contract Name
+                    </th>
+                    <th>
+                        Monthly Recurring Charge
+                    </th>
+                    <th>
+                        Opening Date
+                    </th>
+                    <th>
+                        Close Date
+                    </th>
+                    <th>
+                        Store Open
+                    </th>
+                    <th>
+                        Operation Controls
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model.StoreList)
+                {
+                    <tr>
+                        <td width="5%">@obj.StoreCode</td>
+                        <td width="5%">@obj.Entity</td>
+                        <td width="15%">@obj.StoreName</td>
+                        <td width="5%">@obj.StoreType</td>
+                        <td width="10%">@obj.ContractCode</td>
+                        <td width="10%">@obj.BusinessName</td>
+                        <td width="10%">@obj.ContractName</td>
+                        <td width="10%">@obj.MRC</td>
+                        <td width="5%">@obj.OpenDate.ToShortDateString()</td>
+                        <td width="5%">@obj.CloseDate?.ToShortDateString()</td>
+                        <td width="5%">@(obj.IsOpen ? "Yes" : "No")</td>
+                        <td width="15%">
+                            <div class="d-grid gap-2 d-md-block">
+                                @if (obj.IsOpen == true)
+                                {
+                                    <a asp-page="/adminSetup/admStore_Edit" asp-route-id="@obj.Id" class="btn btn-outline-info @(Model.stoEditAccess ? "" : "disabled")">Edit</a>
+                                    <a asp-page="/adminSetup/admStore_Archive" asp-route-id="@obj.Id" class="btn btn-outline-danger @(Model.sCloseAccess ? "" : "disabled")">Close</a>
+                                }
+                                else
+                                {
+                                    <a asp-page="/adminSetup/admStore_Edit" asp-route-id="@obj.Id" class="btn btn-outline-info @(Model.stoEditAccess ? "" : "disabled")">Edit</a>
+                                    <a asp-page="/adminSetup/admStore_Activate" asp-route-id="@obj.Id" class="btn btn-outline-dark @(Model.sOpenAccess ? "" : "disabled")">Open</a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div>
+    <!-- Render the partial view and pass data -->
+    @await Html.PartialAsync("admStore_Add_", ViewData)
+</div>
+
+@section Scripts {
+
+    <script>
+        var prefixes = @Html.Raw(Json.Serialize(ViewData["Prefixes"]));
+    </script>
+
+
+    <script>
+        $(document).ready(function () {
+            $('#storeTable').DataTable({
+                "initComplete": function (settings, json) {
+                    $('.dataTables_filter input').attr('id', 'search-input');
+                }
+            });
+        });
+    </script>
+
+    <script src="~/js/fetchEntity.js"></script>
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

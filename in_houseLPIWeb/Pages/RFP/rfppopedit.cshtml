@@ -1,0 +1,226 @@
+﻿@* Edited by Kurt *@
+@model in_houseLPIWeb.Pages.RFP.rfpEditModel
+<link rel="stylesheet" href="https://unpkg.com/choices.js/public/assets/styles/choices.min.css">
+<script src="https://unpkg.com/choices.js/public/assets/scripts/choices.min.js"></script>
+<!-- This modal is for Purpose of Payment Form -->
+<link href="~/css/rfpadddialog.css" rel="stylesheet" />
+<script src="/js/rfpEditDialog.js"></script>
+<div class="modal fade" id="modelModals" tabindex="-1" role="dialog" aria-labelledby="editPoPModalLabel" aria-hidden="true">
+    <!-- The id is used in calling the modal dialog -->
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPoPModalLabel">Add Purpose of Paymentsssssssssssssssssss</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="AddPOP" id="popForm" onsubmit="return validateForm()">
+                    <input asp-for="PoPListx.PoP_Id" value="@Model.popQ" type="text" class="form-control" id="popId" readonly hidden />
+                    <input asp-for="PoPListx.CreatedBy" value="@User.Identity.Name" class="form-control" readonly hidden />
+
+                    <!-- Container for Type of Charge -->
+                    <div class="mb-2">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="ToCq">Type of Charges:</label>
+                            </div>
+                            <div class="col-8">
+                                <select class="form-control py-0" id="ToCq" asp-for="PoPListx.ToC" asp-items="@Model.cbToC">
+                                    <option value="">Select Type of Charge</option>
+                                </select>
+                                <label id="errormsg" style="color: red;"></label>
+                                <span asp-validation-for="PoPListx.ToC" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Container for Charge To -->
+                    <div class="mb-2">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="popEntity">Charge To:</label>
+                            </div>
+                            <div class="col-2 pr-0">
+                                <select id="popEntity" class="form-control p-0" asp-for="PoPListx.Entity" asp-items="@Model.cbEntities">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                            <div class="col-6 pl-0">
+                                <select id="storeSelect" class="form-control p-0" asp-for="PoPListx.ChargeTo">
+                                    <option value=""></option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6 offset-4" style="text-align: right;">
+                                <label id="errorPopEntity" style="color: red; margin-right: 10px;" hidden></label>
+                                <label id="errorChargeTo" style="color: red;"></label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Container for Dates -->
+                    <div class="mb-2">
+                        <div class="row align-items-center">
+                            <div class="col-4">
+                                <label for="dueDate">Due Date: <i>(optional)</i></label>
+                            </div>
+                            <div class="col-8">
+                                <input id="dueDate" asp-for="PoPListx.DueDate" type="date" class="form-control" />
+                                <span asp-validation-for="PoPListx.DueDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-8 offset-4" style="text-align: left;">
+                                <label id="errorDueDate" style="color: red;"></label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-2">
+                        <div class="row">
+                            <div class="col-5"></div>
+                            <div class="col-1 px-1 align-self-center">
+                                <label class="switch">
+                                    <input type="checkbox" class="form-check" id="dateCheck">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="col-6 px-1 align-self-center">
+                                <label for="dateCheck" class="font-italic">not a billing period?</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-2" id="billPeriod">
+                        <div class="row mb-2 align-items-center">
+                            <div class="col-4">
+                                <label for="csd">Cover Start Date:</label>
+                            </div>
+                            <div class="col-8">
+                                <input id="csd" asp-for="PoPListx.CoverStartDate" type="date" class="form-control" />
+                                <span asp-validation-for="PoPListx.CoverStartDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row align-items-center">
+                            <div class="col-4">
+                                <label for="ced">Cover End Date:</label>
+                            </div>
+                            <div class="col-8">
+                                <input id="ced" asp-for="PoPListx.CoverEndDate" type="date" class="form-control" />
+                                <label id="errorCoverStartDate" style="color: red;"></label>
+                                <span asp-validation-for="PoPListx.CoverEndDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-2" id="billDate">
+                        <div class="row align-items-center">
+                            <div class="col-4">
+                                <label for="ced">Billing Date:</label>
+                            </div>
+                            <div class="col-8">
+                                <input id="bdate" type="date" class="form-control" />
+                                <label id="errorCoverEndDate" style="color: red;"></label>
+                                <span asp-validation-for="PoPListx.CoverStartDate" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-2">
+                        <div class="row">
+                            <div class="col-5"></div>
+                            <div class="col-1 px-1 align-self-center">
+                                <label class="switch">
+                                    <input type="checkbox" class="form-check" id="ticketCheck">
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                            <div class="col-6 px-1 align-self-center">
+                                <label for="ticketCheck" class="font-italic">include transaction number?</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Container for Invoice Numbers -->
+                    <div class="mb-2" id="ticket">
+                        <!-- Row for Receipt No -->
+                        <div class="row mb-3">
+                            <div class="col-4 pr-0">
+                                <label for="ORq">Official Receipt No.:</label>
+                            </div>
+                            <div class="col-8">
+                                <input id="ORq" asp-for="PoPListx.OR_Number" class="form-control" />
+                                <span asp-validation-for="PoPListx.OR_Number" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <!-- Row for SI No -->
+                        <div class="row mb-3">
+                            <div class="col-4 pr-0">
+                                <label for="SIq">Sales Invoice No.:</label>
+                            </div>
+                            <div class="col-8">
+                                <input id="SIq" asp-for="PoPListx.SI_Number" class="form-control" />
+                                <span asp-validation-for="PoPListx.SI_Number" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <!-- Container for Service Invoice-->
+                        <div class="mb-2">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label for="serviceInvoice">Service Invoice:</label>
+                                </div>
+                                <div class="col-8">
+                                    <input id="serviceInvoice" asp-for="PoPListx.ServiceInvoice" class="form-control" />
+                                    <span asp-validation-for="PoPListx.ServiceInvoice" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Row for DR No -->
+                        <div class="row mb-3">
+                            <div class="col-4 pr-0">
+                                <label for="DRq">Delivery Receipt No.:</label>
+                            </div>
+                            <div class="col-8">
+                                <input id="DRq" asp-for="PoPListx.DR_Number" class="form-control" />
+                                <span asp-validation-for="PoPListx.DR_Number" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Container for Amount -->
+                    <div class="mb-2">
+                        <div class="row align-items-center">
+                            <div class="col-4">
+                                <label for="amount">Amount:</label>
+                            </div>
+                            <div class="col-8">
+                                <input id="amount" asp-for="PoPListx.Amount" type="number" step="any" class="form-control" />
+                                <span asp-validation-for="PoPListx.Amount" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Container for Remarks -->
+                    <div class="mb-2">
+                        <div class="row">
+                            <div class="col-4">
+                                <label for="remarks">Remarks:</label>
+                            </div>
+                            <div class="col-8">
+                                <textarea id="remarks" asp-for="PoPListx.Remarks" class="form-control"></textarea>
+                                <span asp-validation-for="PoPListx.Remarks" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

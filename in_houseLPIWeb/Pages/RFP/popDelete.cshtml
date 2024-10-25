@@ -1,0 +1,275 @@
+﻿@page
+@model in_houseLPIWeb.Pages.RFP.popDeleteModel
+@{
+    ViewData["Title"] = "Delete Purpose of Payment";
+}
+
+<partial name="_Notification" />
+
+<div class="container-fluid px-0">
+    <h2 class="text-primary">Delete Purpose of Payment</h2>
+
+    <div class="container-fluid pt-2">
+        <form method="post">
+            <input asp-for="PoPListx.Id" readonly hidden />
+            <input asp-for="PoPListx.PoP_Id" id="popId" readonly hidden />
+            <input asp-for="PoPListx.CreatedBy" name="createdBy" class="form-control" readonly hidden />
+            <input asp-for="PoPListx.CreateDate" class="form-control" readonly hidden />
+            <!-- Container for Type of Charges -->
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col-4">
+                        <label asp-for="PoPListx.ToC" for="TOCx">Type of Charges:</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="PoPListx.ToC" id="TOCx" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+            <!-- Container for DATES -->
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col-4">
+                        <label asp-for="PoPListx.DueDate" for="dDatex">Due Date:</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="PoPListx.DueDate" class="form-control" type="date" id="dDatex" readonly />
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2">
+                <div class="row">
+                    <div class="col-5"></div>
+                    <div class="col-1 px-1 align-self-center">
+                        <label class="switch">
+                            <input type="checkbox" class="form-check" id="dateCheck" @(Model.billingDate ? "checked" : "") disabled />
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="col-6 px-1 align-self-center">
+                        <label for="dateCheck" class="font-italic">not a billing period?</label>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2" id="billPeriod">
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-4">
+                            <label asp-for="PoPListx.CoverStartDate" for="csdx">Cover Start Date:</label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="PoPListx.CoverStartDate" class="form-control" type="date" id="csdx" readonly />
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-4">
+                            <label asp-for="PoPListx.CoverEndDate" for="cedx">Cover End Date:</label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="PoPListx.CoverEndDate" class="form-control" type="date" id="cedx" readonly />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mb-2" id="billDate">
+                <div class="row align-items-center">
+                    <div class="col-4">
+                        <label for="ced">Billing Date:</label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="PoPListx.CoverStartDate" class="form-control" type="date" id="csdx" readonly />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container for Charge To -->
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col-4">
+                        <label asp-for="PoPListx.ChargeTo" for="chargex">Charge To:</label>
+                    </div>
+                    <div class="col-8">
+                        <input class="form-control" value="@($"{Model.PoPListx.Entity} | {Model.PoPListx.ChargeTo}")" id="chargex" readonly />
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-2">
+                <div class="row">
+                    <div class="col-5"></div>
+                    <div class="col-1 px-1 align-self-center">
+                        <label class="switch">
+                            <input type="checkbox" class="form-check" id="ticketCheck" @(Model.hasContent ? "checked" : "") disabled>
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    <div class="col-6 px-1 align-self-center">
+                        <label for="ticketCheck" class="font-italic">include transaction number?</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container for Invoice Numbers -->
+            <div class="mb-2" id="ticket">
+                <!-- Row for Receipt No -->
+                <div class="row mb-3">
+                    <div class="col-4 pr-0">
+                        <label for="ORq">Official Receipt No.:</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="ORq" asp-for="PoPListx.OR_Number" class="form-control" readonly />
+                    </div>
+                </div>
+                <!-- Row for SI No -->
+                <div class="row mb-3">
+                    <div class="col-4 pr-0">
+                        <label for="SIq">Sales Invoice No.:</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="SIq" asp-for="PoPListx.SI_Number" class="form-control" readonly />
+                    </div>
+                </div>
+                <!-- Row for DR No -->
+                <div class="row mb-3">
+                    <div class="col-4 pr-0">
+                        <label for="DRq">Delivery Receipt No.:</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="DRq" asp-for="PoPListx.DR_Number" class="form-control" readonly />
+                    </div>
+                </div>
+                <!-- Row for PO No -->
+                <div class="row">
+                    <div class="col-4 pr-0">
+                        <label for="POq">Purchase Order No.:</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="POq" asp-for="PoPListx.PO_Number" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container for Purpose of Payment Amount -->
+            <div class="mb-2">
+                <div class="row">
+                    <div class="col-4">
+                        <label for="popAmount">Gross Amount:</label>
+                    </div>
+                    <div class="col-8">
+                        <input class="form-control" value="@($"{Model.PoPListx.Currency} {Model.PoPListx.Amount}")" id="popAmount" readonly />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container for Taxes -->
+            <div class="mb-2" id="taxes">
+                <!-- Row for VAT -->
+                <div class="row mb-3">
+                    <div class="col-4 align-self-center">
+                        <span>Taxes:</span>
+                    </div>
+                    <div class="col-2 pr-0 text-right align-self-center">
+                        <label class="m-0" for="vatPerc">VAT %:&nbsp;</label>
+                    </div>
+                    <div class="col-2 pl-0">
+                        <input id="vatPerc" asp-for="PoPListx.VATPercent" class="form-control" min="0" max="100" disabled />
+                    </div>
+                    <div class="col-2 pr-0 text-right align-self-center">
+                        <label class="m-0" for="whtPerc">WHT %:&nbsp;</label>
+                    </div>
+                    <div class="col-2 pl-0">
+                        <input id="whtPerc" asp-for="PoPListx.WHTPercent" class="form-control" min="0" max="100" disabled />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container for AutoCompute fields -->
+            <div class="mb-2" id="calcContainer">
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label for="basicAmt">Basic Amount:</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="basicAmt" class="form-control" readonly />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label for="vatAmt">VAT Amount:</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="vatAmt" class="form-control" readonly />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label for="whtAmt">WHT Amount:</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="whtAmt" class="form-control" readonly />
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <label for="netAmt">Net Amount:</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="netAmt" class="form-control" readonly />
+                    </div>
+                </div>
+            </div>
+
+            <div id="ifcBox">
+                <div class="row mb-3">
+                    <div class="col-4 font-weight-bold font-italic mt-2 align-self-center">
+                        <label for="ifcAmt">IFC Amount:</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="ifcAmt" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lpiBox">
+                <div class="row mb-3">
+                    <div class="col-4 font-weight-bold font-italic mt-2 align-self-center">
+                        <label for="lpiAmt">LPI Amount:</label>
+                    </div>
+                    <div class="col-8">
+                        <input id="lpiAmt" class="form-control" readonly>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Container for Purpose of Payment Description -->
+            <div class="mb-3">
+                <div class="row">
+                    <div class="col-4">
+                        <label asp-for="PoPListx.Remarks" for="Descq">Remarks:</label>
+                    </div>
+                    <div class="col-8">
+                        <textarea id="Descq" asp-for="PoPListx.Remarks" class="form-control" type="text" readonly></textarea>
+                        <span asp-validation-for="PoPListx.Remarks" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-6 px-0">
+                    </div>
+                    <div class="col-6 px-0 text-right">
+                        <button type="submit" id="deleteButton" class="btn btn-danger">Delete</button>
+                        <button type="submit" asp-page-handler="Cancel" class="btn btn-outline-secondary mx-2">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script defer src="~/js/taxFunction.js"></script>
+    <script src="~/js/confirmation.js"></script>
+}

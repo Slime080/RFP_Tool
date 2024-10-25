@@ -1,0 +1,38 @@
+﻿@model in_houseLPIWeb.Pages.adminSetup.admUserDep_IndexModel
+
+
+<div class="modal fade" id="addDeptModal" tabindex="-1" role="dialog" aria-labelledby="addDeptModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="registrationModalLabel">Add New Department</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="AddDept">
+                    <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                    <div class="border p-3">
+                        <div class="mb-3">
+                            <label asp-for="Departmentx.DeptName"></label>
+                            <input asp-for="Departmentx.DeptName" class="form-control" type="text" />
+                            <span asp-validation-for="Departmentx.DeptName" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Departmentx.DeptHead"></label>
+                            <input asp-for="Departmentx.DeptHead" class="form-control" type="text" />
+                            <span asp-validation-for="Departmentx.DeptHead" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3" hidden>
+                            <label asp-for="Departmentx.isActive"></label>
+                            <input asp-for="Departmentx.isActive" class="form-control" type="text" value="True" placeholder="Active" readonly />
+                            <span asp-validation-for="Departmentx.isActive" class="text-danger"></span>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

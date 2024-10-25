@@ -1,0 +1,146 @@
+﻿@* Edited by Kurt 8/29/2024 *@
+@page
+@model in_houseLPIWeb.Pages.RFP.rfpIndexModel
+@{
+    ViewData["Title"] = "Request for Payment List Index";
+}
+
+<partial name="_Notification" />
+<link href="~/css/rfpIndex.css" rel="stylesheet" />
+<!-- Centered Filter Dropdown Close to the Table -->
+<div class="container-fluid">
+    @{
+        ViewData["menuId"] = "rfpMenu";
+    }
+    @await Html.PartialAsync("_PartialMenuView")
+</div>
+<div class="row mb-2" style="display: flex; justify-content: center; align-items: center; margin-top: 30px;">
+    <label for="statusFilter" style="margin-right: 10px;">Filter by Status:</label>
+    <div class="custom-dropdown" style="position: relative;">
+        <button id="dropdownButton" class="btn btn-outline-secondary" style="width: 150px;">ALL</button>
+        <ul id="dropdownOptions" class="dropdown-menu" style="display: none; position: absolute; top: 100%; left: 0; width: 100%; z-index: 1;">
+            <li class="dropdown-item" data-value="">ALL</li>
+            <li class="dropdown-item" data-value="Open">OPEN</li>
+            <li class="dropdown-item" data-value="Closed">CLOSED</li>
+        </ul>
+    </div>
+</div>
+<div class="container-fluid">
+    <div class="row py-3">
+        <div class="col-6">
+            <h2 class="text-primary">RFP List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <a asp-page="/RFP/rfpAdd" class="btn btn-primary @(Model.rfpAddAccess ? "" : "disabled")">
+                Add New RFP
+            </a>
+        </div>
+    </div>
+ 
+</div>
+
+<div class="table-container">
+<table id="rfpTable" class="table table-bordered table-striped table-hover">
+    <thead>
+        <tr>
+            <th>RFP #</th>
+            <th>Payee</th>
+            <th>Charge To</th>
+            <th>Gross Amount</th>
+            @*  <th>AP Voucher</th>
+            <th>AP Voucher posted date</th>
+            <th>CDJ Number</th>
+            <th>CDJ Number posted date</th> *@
+            <th>Status</th>
+            <th>Remarks</th>
+            <th>Created by</th>
+            <th>Date Created</th>
+            <th>Operation Controls</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var obj in Model.rfpForms.Where(x => x.IsActive == true))
+        {
+            <tr>
+                <td>LAWHO-@((int)obj.RFP_No + 1000000)</td>
+                <td>@obj.Payee</td>
+                <td>@(Model.PoPDetails.ContainsKey(obj.PoPCode) ? Model.PoPDetails[obj.PoPCode].ChargeTo : "")</td>
+                <td>@(Model.Sums[obj.PoPCode].ToString("N"))</td>
+                @*     <td>@obj.Ap_Voucher</td>
+                <td>@obj.Ap_Voucher_Posted_Date</td>
+                <td>@obj.Cdj_Number</td>
+                <td>@obj.CDJ_Num_Posted_Date</td> *@
+                <td>@obj.Status</td>
+                @* <td>@(Model.PoPDetails.ContainsKey(obj.PoPCode) ? Model.PoPDetails[obj.PoPCode].ApVoucher : "")</td>
+                <td>@(Model.PoPDetails.ContainsKey(obj.PoPCode) ? Model.PoPDetails[obj.PoPCode].Ap_Voucer_Posted_Date : "")</td>
+                <td>@(Model.PoPDetails.ContainsKey(obj.PoPCode) ? Model.PoPDetails[obj.PoPCode].CdjNumber : "")</td>
+                <td>@(Model.PoPDetails.ContainsKey(obj.PoPCode) ? Model.PoPDetails[obj.PoPCode].CDJ_Num_Posted_Date : "")</td>
+                <td>@(Model.PoPDetails.ContainsKey(obj.PoPCode) ? Model.PoPDetails[obj.PoPCode].Status : "")</td> *@
+                <td>@obj.Remarks</td>
+                <td>@obj.CreatedBy</td>
+                <td>@obj.CreatedDate</td>
+                <td>
+                    <div class="d-flex justify-content-center">
+                        @if (obj.IsActive)
+                        {
+                            <a asp-page="/RFP/rfpView" asp-route-id="@obj.RFP_No" class="btn btn-outline-primary me-2 @(Model.rfpViewAccess ? "" : "disabled")" style="margin-right: 10px;">View</a>
+                            <a asp-page="/RFP/rfpArchive" asp-route-id="@obj.RFP_No" class="btn btn-outline-danger @(Model.rfpArchiveAccess ? "" : "disabled")">Archive</a>
+                        }
+                        else
+                        {
+                            <a asp-page="/RFP/rfpView" asp-route-id="@obj.RFP_No" class="btn btn-outline-primary me-3 @(Model.rfpViewAccess ? "" : "disabled")">View</a>
+                            <a asp-page="/RFP/rfpActivate" asp-route-id="@obj.RFP_No" class="btn btn-outline-danger @(Model.rfpActvtAccess ? "" : "disabled")">Unarchive</a>
+                        }
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            var dataTable = $('#rfpTable').DataTable();
+
+            // Show/Hide the dropdown
+            $('#dropdownButton').on('click', function () {
+                $('#dropdownOptions').toggle();
+            });
+
+            // Handle dropdown option selection
+            $('#dropdownOptions li').on('click', function () {
+                var selectedValue = $(this).data('value');
+                var selectedText = $(this).text().trim(); // Trim any extra whitespace
+
+                // Update the button text to reflect the selection
+                $('#dropdownButton').text(selectedText);
+
+                console.log('Selected Value:', selectedValue); // Debugging: log selected value
+                console.log('Column Index for Status:', 8); // Debugging: log column index
+
+                // Filter the table based on selected status
+                if (selectedValue) {
+                    // Adjust column index if necessary
+                    dataTable.column(4).search('^' + selectedValue + '$', true, false).draw();
+                } else {
+                    dataTable.column(4).search('').draw();
+                }
+
+                // Hide the dropdown
+                $('#dropdownOptions').hide();
+            });
+
+            // Hide dropdown when clicked outside
+            $(document).on('click', function (e) {
+                if (!$(e.target).closest('.custom-dropdown').length) {
+                    $('#dropdownOptions').hide();
+                }
+            });
+        });
+    </script>
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

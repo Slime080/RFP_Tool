@@ -1,0 +1,48 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admRFPTOC_EditModel
+@{
+    ViewData["Title"] = "Edit Type of Charge details";
+}
+
+<div class="container-fluid">
+    @{ ViewData["menuId"] = "rfpUtilMenu"; }
+    @await Html.PartialAsync("_PartialMenuView")
+</div>
+
+<div class="container-fluid justify-content-center">
+    <form method="post">
+        <input hidden asp-for="TOCs.Id" />
+        <div class="border p-3 mt-4">
+            <div class="row pb-2">
+                <h2 class="text-primary pl-3">Edit Type of Charge</h2>
+                <hr />
+            </div>
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="mb-3">
+                <label asp-for="TOCs.TOCName"></label>
+                <input asp-for="TOCs.TOCName" class="form-control" readonly />
+                <span asp-validation-for="TOCs.TOCName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="TOCs.TOCdescription"></label>
+                <input asp-for="TOCs.TOCdescription" class="form-control" />
+                <span asp-validation-for="TOCs.TOCdescription" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="switch">
+                    <input type="checkbox" asp-for="TOCs.IsArchived" id="toggleSwitch" readonly>
+                    <span class="slider round"></span>
+                </label>
+                <label class="form-check-label" for="toggleSwitch">Archived</label>
+            </div>
+            <button type="submit" class="btn btn-primary">Update</button>
+            <a asp-page="/adminSetup/admRFPTOC_Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+} <!-- Used to add the _ValidationScriptsPartial.cshtml -->

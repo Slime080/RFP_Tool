@@ -1,0 +1,39 @@
+﻿@{ 
+    DateTime currentTime = DateTime.Now.ToLocalTime();
+    bool isLogin = User.Identity.IsAuthenticated;
+}
+
+@if (isLogin)
+{
+    <div>
+        <form method="post" class="form-inline" asp-page="@Url.Content("~/userLogin/userLogout")">
+            @if (currentTime.TimeOfDay < DateTime.Parse("12:00 PM").TimeOfDay)
+            {
+                <span>Good morning, @User.Identity.Name </span>
+            }
+            else if (currentTime.TimeOfDay < DateTime.Parse("6:00 PM").TimeOfDay)
+            {
+                <span>Good afternoon, @User.Identity.Name </span>
+            }
+            else
+            {
+                <span>Good evening, @User.Identity.Name </span>
+            }
+            <button type="submit" class="ml-2 btn btn-link">Logout</button>
+            <span id="currentDateTime"></span>
+        </form>
+    </div>
+}
+else
+{
+    <div class="container px-1">
+        <div class="row">
+            <div class="col-8 px-0 mt-2 text-right">
+                <span id="currentDateTime"></span>
+            </div>
+            <div class="col-4 px-1">
+                <a class="btn btn-primary" asp-page="/userLogin/Login">Login</a>
+            </div>
+        </div>
+    </div>
+}

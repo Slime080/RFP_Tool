@@ -1,0 +1,125 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admUserDep_IndexModel
+@{
+    ViewData["Title"] = "Department List";
+}
+
+<partial name="_Notification" />
+
+@if (Model.userRole == "0")
+{
+    <div class="container-fluid">
+        @{ ViewData["menuId"] = "adminMenu"; }
+        @await Html.PartialAsync("_PartialMenuView")
+    </div>
+}
+else
+{
+    <div class="container-fluid">
+        @{ ViewData["menuId"] = "utilMenu"; }
+        @await Html.PartialAsync("_PartialMenuView")
+    </div>
+}
+
+<div class="container-fluid">
+    <div class="row py-3">
+        <div class="col-6">
+            <h2 class="text-primary">Department list</h2>
+        </div>
+        @if (Model.userRole.Equals("0"))
+        {
+            <div class="col-6 text-right">
+                <a data-toggle="modal" data-target="#addDeptModal" class="btn btn-primary text-light mx2">
+                    Add New Department
+                </a>
+            </div>
+        }
+    </div>
+    <table class="table table-bordered table-striped" id="userDepTable">
+        <thead>
+            <tr>
+                <th>
+                    ID
+                </th>
+                <th>
+                    Department Name
+                </th>
+                <th>
+                    Department Head
+                </th>
+                <th>
+                    Active Department
+                </th>
+                <th>
+                    Operation Controls
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (Model.Departments != null)
+            {
+                @foreach (var obj in Model.Departments)
+                {
+                    <tr>
+                        <td width="10%">@obj.Id</td>
+                        <td width="25%">@obj.DeptName</td>
+                        <td width="35%">@obj.DeptHead</td>
+                        <td width="15%">@(obj.isActive ? "Yes" : "No")</td>
+                        <td width="15%">
+                            @if (obj.isActive)
+                            {
+                                <div class="d-flex text-center">
+                                    <a asp-page="/adminSetup/admUserDep_Edit" asp-route-id="@obj.Id" class="btn btn-outline-info @(Model.deptEditAccess ? "" : "disabled")">
+                                        Edit
+                                    </a>
+                                    <div class="m-2"></div>
+                                    @if (Model.userRole.Equals("0"))
+                                    {
+                                        <a asp-page="/adminSetup/admUserDep_Archive" asp-route-id="@obj.Id" class="btn btn-outline-danger">
+                                            Deactivate
+                                        </a>
+                                    }
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="d-flex text-center">
+                                    <a asp-page="/adminSetup/admUserDep_Edit" asp-route-id="@obj.Id" class="btn btn-outline-info @(Model.deptEditAccess ? "" : "disabled")">
+                                        Edit
+                                    </a>
+                                    <div class="m-2"></div>
+                                    @if (Model.userRole.Equals("0"))
+                                    {
+                                        <a asp-page="/adminSetup/admUserDep_Activate" asp-route-id="@obj.Id" class="btn btn-outline-dark">
+                                            Activate
+                                        </a>
+                                    }
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="container">
+    @await Html.PartialAsync("admUserDep_Add_", ViewData)
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#userDepTable').DataTable({
+                "initComplete": function (settings, json) {
+                    $('.dataTables_filter input').attr('id', 'search-input');
+                }
+            });
+        });
+    </script>
+
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}

@@ -1,0 +1,77 @@
+﻿/* Created by Kurt 8/30/2024 */
+
+#rfpTable th, #rfpTable td {
+    padding: 8px; /* Reduced padding for a more compact table */
+    text-align: center; /* Center align text */
+    vertical-align: middle; /* Align cell contents in the middle vertically */
+}
+
+.table-container {
+    position: relative;
+    overflow: auto; /* Allow scrolling */
+    max-height: 400px; /* Adjust height as needed */
+}
+
+#rfpTable {
+    width: 100%; /* Ensure the table takes full width */
+}
+
+    #rfpTable thead th {
+        position: sticky;
+        top: 0;
+        background-color: #5B99C2; /* Header background color */
+        color: #fff; /* Header text color */
+        z-index: 10; /* Ensure header stays above other content */
+    }
+
+.table th {
+    background-color: #5B99C2;
+    color: #fff;
+    border-bottom: 2px solid #ccc;
+    border-right: 1px solid #ccc;
+    text-align: center;
+    vertical-align: middle;
+    font-weight: bold;
+}
+
+.table td {
+    border-right: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    padding: 0.2rem;
+    background-color: #D1E9F6;
+}
+
+.btn-group .btn {
+    margin-right: 5px; /* Add space between buttons */
+}
+
+.btn-outline-primary {
+    color: #5B99C2;
+    border-color: #5B99C2;
+}
+
+    .btn-outline-primary:hover {
+        color: white;
+        background-color: #5B99C2;
+        border-color: #5B99C2;
+    }
+
+.btn-danger {
+    background-color: #d9534f;
+    border-color: #d43f3a;
+}
+
+    .btn-danger:hover {
+        background-color: #c9302c;
+        border-color: #ac2925;
+    }
+
+.btn-success {
+    background-color: #5cb85c;
+    border-color: #4cae4c;
+}
+
+    .btn-success:hover {
+        background-color: #449d44;
+        border-color: #398439;
+    }

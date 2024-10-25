@@ -1,0 +1,113 @@
+﻿/*Created by Kurt 8/30/2024*/
+
+/* Table container to ensure proper spacing */
+.table-container {
+    width: 100%;
+    max-height: 400px; /* Adjust height as needed */
+    overflow-y: auto;
+}
+.table-scroll {
+    position: relative;
+}
+
+
+
+    /* Table header styling */
+    .table th {
+        background-color: #5B99C2;
+        color: #fff;
+        border-bottom: 2px solid #ccc;
+        border-right: 1px solid #ccc;
+        text-align: center;
+        vertical-align: middle;
+        white-space: nowrap;
+        font-weight: bold;
+        padding: 10px; /* Add padding for better spacing */
+    }
+
+    /* Table cell styling */
+    .table td {
+        border-bottom: 1px solid #ddd;
+        border-right: 1px solid #ddd; /* Add border to cells */
+        padding: 10px; /* Add padding for better spacing */
+        text-align: left;
+    }
+
+    /* Zebra striping for table rows */
+    .table tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
+
+    /* Table footer styling (if applicable) */
+    .table tfoot td {
+        font-weight: bold;
+        padding: 10px;
+    }
+.table-fixed-height {
+    height: 500px; /* Adjust this value as needed */
+    overflow-y: auto; /* Add scroll if content exceeds height */
+}
+.table-row-height td {
+    height: 40px; /* Adjust this value as needed */
+}
+
+
+/* Ending Table css*/
+
+
+/* Container to center content */
+.center-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Full height of the viewport */
+    margin: 0 auto; /* Center horizontally */
+    width: 100%; /* Ensures the container takes full width */
+    max-width: 600px; /* Optional: Max width for container */
+    padding: 20px; /* Optional: Padding inside the container */
+}
+
+/* Label styling */
+.label {
+    text-align: right;
+    margin: 8px 0; /* Uniform margin for labels */
+    padding-right: 0.25rem; /* Spacing to the right */
+    white-space: nowrap; /* Prevents text wrapping */
+}
+
+/* Form control styling */
+.form-control {
+    padding: 0; /* Reset padding for form controls */
+}
+
+/* Row styling */
+.row {
+    display: flex;
+    align-items: center; /* Center items vertically */
+    padding-bottom: 0.5rem; /* Padding bottom */
+}
+
+/* Column styling */
+.col-10, .col-2, .col-6, .col-4 {
+    padding-left: 0; /* Remove left padding */
+    padding-right: 0; /* Remove right padding */
+}
+#Payee {
+    position: relative;
+    z-index: 1000; /* Higher than the table's z-index */
+}
+
+.dropdown-menu {
+    position: absolute; /* Ensure dropdown is positioned correctly */
+    z-index: 2000; /* Even higher to appear on top */
+}
+
+
+/* Example grid system flex-basis */
+.col-10 { flex: 0 0 83.3333%; }
+.col-2 { flex: 0 0 16.6667%; }
+.col-6 { flex: 0 0 50%; }
+.col-4 { flex: 0 0 33.3333%; }
+
+

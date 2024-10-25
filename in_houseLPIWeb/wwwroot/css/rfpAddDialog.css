@@ -1,0 +1,237 @@
+﻿/*Edited by Kurt*/
+
+/*.dropdown-menu {
+    width: 100%;
+    padding: 0;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;  Added border radius for rounded corners 
+}
+
+#ToCqSearch {
+    margin: 0;
+    width: 100%;
+    border-radius: 8px 8px 0 0;  Rounded top corners 
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    background-color: #DDDDDD;
+}
+
+select#ToCq {
+    border: none;
+    width: 100%;
+    height: auto;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+.dropdown-item:hover, #ToCqSearch:focus {
+    background-color: #e6f7ff;
+    border-color: #b3d7ff;
+}
+
+#storeSearch {
+    margin: 0;
+    width: 100%;
+    border-radius: 8px 8px 0 0;  Rounded top corners 
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+    font-size: 14px;
+    background-color: #DDDDDD;
+}
+
+select#storeSelect {
+    border: none;
+    width: 100%;
+    height: auto;
+    overflow-y: auto;
+    font-size: 14px;
+}
+
+.dropdown-item:hover, #storeSearch:focus {
+    background-color: #e6f7ff;
+    border-color: #b3d7ff;
+}
+
+.text-danger.error-message {
+    color: red;  Ensure error messages are displayed in red 
+    font-size: 0.875em;  Adjust font size if needed 
+    display: block;  Ensure the message is displayed as a block 
+}
+
+ Modal Styling 
+.modal.fade .modal-dialog {
+    transition: transform 0.3s ease-out;
+    transform: translateY(-50px);
+}
+
+.modal.show .modal-dialog {
+    transform: translateY(0);
+}
+
+ Input Focus Effects 
+input.form-control:focus,
+textarea.form-control:focus {
+    border-color: #5b99c2;
+    box-shadow: 0 0 0 0.2rem rgba(91, 153, 194, 0.25);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #888;
+    opacity: 1;
+}
+
+ Switch Styling 
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 34px;
+    height: 20px;
+}
+
+    .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+    }
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 20px;
+}
+
+    .slider:before {
+        position: absolute;
+        content: "";
+        height: 12px;
+        width: 12px;
+        border-radius: 50%;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: .4s;
+    }
+
+input:checked + .slider {
+    background-color: #5b99c2;
+}
+
+    input:checked + .slider:before {
+        transform: translateX(14px);
+    }*/
+/*.dropdown-container {
+    position: relative;
+}
+
+.dropdown-search-container {
+    display: none;*/ /* Hidden by default, shown when dropdown is clicked */
+    /*position: absolute;
+    width: 100%;
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 1000;
+    box-sizing: border-box;
+    margin-top: 0;
+}
+
+.dropdown-search {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0;*/ /* Ensure no gap between input and dropdown */
+/*}
+
+.dropdown-options {
+    max-height: 200px;*/ /* Limit height to make it scrollable */
+    /*overflow-y: auto;
+    margin-top: 0;*/ /* No margin to prevent overlap */
+/*}
+
+    .dropdown-options div {
+        padding: 8px;
+        cursor: pointer;
+    }*/
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+}
+
+.search-box {
+    width: 100%;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 100%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+    .dropdown-content div {
+        padding: 12px 16px;
+        cursor: pointer;
+    }
+
+        .dropdown-content div:hover {
+            background-color: #f1f1f1;
+        }
+
+.show {
+    display: block;
+}
+
+/* Modal Styling */
+.modal-dialog {
+    margin: 1.75rem auto;
+    max-width: 55vw; /* Set the maximum width to 90% of the viewport width */
+    width: auto; /* Allow the width to adjust automatically */
+}
+
+.modal-content {
+    border-radius: 8px; /* Rounded corners for the modal content */
+}
+
+/* Adjust modal size for smaller screens */
+@media (max-width: 576px) {
+    .modal-dialog {
+        max-width: 50vw; /* Increase the maximum width on very small screens */
+    }
+}
+.text-danger {
+    color: red;
+    font-weight: bold;
+}
+.dropdown-container {
+    margin-top: 35px;
+}
+
+.
+/*.left-aligned-form {
+    width: %;*/ /* Adjust width as necessary */
+    /*margin-left: 0;*/ /* Align the form to the left */
+    /*padding: 10px;*/ /* Compress padding */
+/*}
+
+    .left-aligned-form .row {
+        margin-bottom: 10px;*/ /* Compress row gaps */
+    /*}
+
+    .left-aligned-form .form-control-sm {
+        font-size: 0.85rem;*/ /* Compress font size slightly */
+    /*}*/
+
+

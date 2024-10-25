@@ -1,0 +1,48 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admRFPPayee_EditModel
+@{
+    ViewData["Title"] = "Edit Payee details";
+}
+
+<div class="container-fluid">
+    @{ ViewData["menuId"] = "rfpUtilMenu"; }
+    @await Html.PartialAsync("_PartialMenuView")
+</div>
+
+<div class="container-fluid justify-content-center">
+    <form method="post">
+        <input hidden asp-for="Payees.Id" />
+        <div class="border p-3 mt-4">
+            <div class="row pb-2">
+                <h2 class="text-primary pl-3">Edit Payee details</h2>
+                <hr />
+            </div>
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="mb-3">
+                <label asp-for="Payees.PayeeName"></label>
+                <input asp-for="Payees.PayeeName" class="form-control" readonly />
+                <span asp-validation-for="Payees.PayeeName" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Payees.PayeeAddress"></label>
+                <input asp-for="Payees.PayeeAddress" class="form-control" />
+                <span asp-validation-for="Payees.PayeeAddress" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label class="switch">
+                    <input type="checkbox" asp-for="Payees.IsActive" id="toggleSwitch" readonly />
+                    <span class="slider round"></span>
+                </label>
+                <label class="form-check-label" for="toggleSwitch">Active</label>
+            </div>
+            <button type="submit" class="btn btn-primary mx-2">Update</button>
+            <a asp-page="/adminSetup/admRFPPayee_Index" class="btn btn-outline-secondary mx-2">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+} <!-- Used to add the _ValidationScriptsPartial.cshtml -->

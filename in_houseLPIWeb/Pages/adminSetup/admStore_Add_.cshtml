@@ -1,0 +1,152 @@
+﻿@model in_houseLPIWeb.Pages.adminSetup.admStore_IndexModel
+
+<div class="modal fade" id="addStoreModal" tabindex="-1" role="dialog" aria-labelledby="addStoreModalLabel" aria-hidden="true">
+    <!-- The id is used in calling the modal dialog -->
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addStoreModalLabel">Add New Store</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form method="post" asp-page-handler="AddStore">
+                    <div asp-validation-summary="ModelOnly"></div>
+                    <!-- Container Store Number -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label asp-for="Stores.StoreCode"></label>
+                            </div>
+                            <div class="col-8">
+                                <input asp-for="Stores.StoreCode" class="form-control" type="text" />
+                            </div>
+                        </div>
+                        <span asp-validation-for="Stores.StoreCode" class="text-danger"></span>
+                    </div>
+                    <!-- Container Store Entity -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label asp-for="Stores.Entity" for="entity"></label>
+                            </div>
+                            <div class="col-8">
+                                <select asp-for="Stores.Entity" class="form-control" asp-items="@Model.cbEntities" id="entity">
+                                    <option value="">SELECT ENTITY</option>
+                                </select>
+                            </div>
+                        </div>
+                        <span asp-validation-for="Stores.Entity" class="text-danger"></span>
+                    </div>
+                    <!-- Container Store Name -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label asp-for="Stores.StoreName" for="combineStoreName"></label>
+                            </div>
+                            <div class="col-8">
+                                <input class="form-control" type="text" id="entityPrefix" disabled hidden />
+                                <input class="form-control" id="storeNameInput" name="storeNameInput" type="text" />
+                                <input class="form-control" id="combineStoreName" name="Stores.StoreName" asp-for="Stores.StoreName" readonly />
+                            </div>
+                        </div>
+                        <span asp-validation-for="Stores.StoreName" class="text-danger"></span>
+                    </div>
+                    <!-- Container Opening Date -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label asp-for="Stores.OpenDate"></label>
+                            </div>
+                            <div class="col-8">
+                                <input asp-for="Stores.OpenDate" class="form-control" type="date" />
+                            </div>
+                        </div>
+                        <span asp-validation-for="Stores.OpenDate" class="text-danger"></span>
+                    </div>
+                    <!-- Container Close Date -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label asp-for="Stores.CloseDate"></label>
+                            </div>
+                            <div class="col-8">
+                                <input asp-for="Stores.CloseDate" class="form-control" type="date" />
+                            </div>
+                        </div>
+                        <span asp-validation-for="Stores.CloseDate" class="text-danger"></span>
+                    </div>
+
+                    <!-- Container for 1003 store additional fields -->
+                    <div id="ifcContainer">
+                        <!-- Container Store Type -->
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label asp-for="Stores.StoreType"></label>
+                                </div>
+                                <div class="col-8">
+                                    <select asp-for="Stores.StoreType" asp-items="@Model.cbStoreType" class="form-control">
+                                        <option value="">SELECT STORE TYPE</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <span asp-validation-for="Stores.StoreType" class="text-danger"></span>
+                        </div>
+                        <!-- Container Contract Code -->
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label asp-for="Stores.ContractCode"></label>
+                                </div>
+                                <div class="col-8">
+                                    <input asp-for="Stores.ContractCode" class="form-control" type="text" />
+                                </div>
+                            </div>
+                            <span asp-validation-for="Stores.ContractCode" class="text-danger"></span>
+                        </div>
+                        <!-- Container Business Name -->
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label asp-for="Stores.BusinessName"></label>
+                                </div>
+                                <div class="col-8">
+                                    <input asp-for="Stores.BusinessName" class="form-control" type="text" />
+                                </div>
+                            </div>
+                            <span asp-validation-for="Stores.BusinessName" class="text-danger"></span>
+                        </div>
+                        <!-- Container Contract Name -->
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-4">
+                                    <label asp-for="Stores.ContractName"></label>
+                                </div>
+                                <div class="col-8">
+                                    <input asp-for="Stores.ContractName" class="form-control" type="text" />
+                                </div>
+                            </div>
+                            <span asp-validation-for="Stores.ContractName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <!-- Container for Toggle switch for Stores Status -->
+                    <div class="mb-3">
+                        <label class="switch">
+                            <input type="checkbox" asp-for="Stores.IsOpen" id="toggleSwitch" checked>
+                            <span class="slider round"></span>
+                        </label>
+                        <label class="form-check-label px-3" for="toggleSwitch">Active</label>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-block">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

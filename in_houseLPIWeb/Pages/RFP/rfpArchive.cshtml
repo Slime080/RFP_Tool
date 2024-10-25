@@ -1,0 +1,209 @@
+﻿@page
+@model in_houseLPIWeb.Pages.RFP.rfpArchiveModel
+@using in_houseLPIWeb.Utilities
+@{
+    string formattedRFP_No = $"LAWHO-{Model.rfpFormx.RFP_No + 1000000}";
+    ViewData["Title"] = "Archive Request for Payment - " + formattedRFP_No;
+}
+
+<style>
+    .table td, .table th {
+        padding: 0.4rem;
+    }
+
+    .table-container {
+        width: 100%;
+        max-height: 130px;
+        overflow-y: auto;
+    }
+
+    .table th {
+        background-color: #f2f2f2;
+        text-align: center;
+    }
+
+    .btn-custom {
+        background-color: #D1E9F6;
+        border: 1px solid #ccc;
+        color: #333;
+        padding: 0.5rem 1rem;
+        text-transform: uppercase;
+    }
+
+        .btn-custom:hover {
+            background-color: #A1C6D9;
+        }
+
+    .btn-outline-custom {
+        border-color: #D1E9F6;
+        color: #333;
+    }
+
+        .btn-outline-custom:hover {
+            background-color: #D1E9F6;
+            color: #333;
+        }
+
+    .form-label {
+        font-weight: bold;
+        margin-bottom: 0.2rem;
+    }
+
+    .text-uppercase {
+        text-transform: uppercase;
+    }
+</style>
+
+<partial name="_Notification" />
+
+<div class="container">
+    <div class="text-primary mb-3">
+        <h2 class="text-center">Archive Request For Payment</h2>
+    </div>
+
+    <div class="card shadow-sm p-4">
+        <form method="post">
+            <input hidden asp-for="rfpFormx.RFP_No" />
+            <input hidden id="reqP" value="@User.Identity.Name" />
+            <input class="form-control" id="dToday" value="@DateTime.Now.ToString("yyyy-MM-dd")" readonly hidden />
+            <input class="form-control" id="createdDate" value="@Model.rfpFormx.CreatedDate" readonly hidden />
+
+            <!-- RFP Number Row -->
+            <div class="row mb-3">
+                <label class="col-md-2 form-label text-end">RFP NO.:</label>
+                <div class="col-md-4">
+                    <input class="form-control text-center" value="@formattedRFP_No" id="displayRFP" readonly />
+                    <input class="form-control" id="rfpNo" value="@Model.rfpFormx.RFP_No" readonly hidden />
+                </div>
+            </div>
+
+            <!-- Payee and Due Date -->
+            <div class="row mb-3">
+                <label class="col-md-2 form-label text-end">PAYEE:</label>
+                <div class="col-md-4">
+                    <input class="form-control" id="payeeP" asp-for="rfpFormx.Payee" readonly />
+                </div>
+                <label class="col-md-2 form-label text-end">DUE DATE:</label>
+                <div class="col-md-4">
+                    <input asp-for="rfpFormx.DueDate" type="date" class="form-control" readonly />
+                </div>
+            </div>
+
+            <!-- Mode of Payment and Type of Payment -->
+            <div class="row mb-3">
+                <label class="col-md-2 form-label text-end">MODE OF PAYMENT:</label>
+                <div class="col-md-4">
+                    <input class="form-control" id="mopP" asp-for="rfpFormx.MoP" readonly />
+                </div>
+                <label class="col-md-2 form-label text-end">TYPE OF PAYMENT:</label>
+                <div class="col-md-4">
+                    <input class="form-control" id="topP" asp-for="rfpFormx.ToP" readonly />
+                </div>
+            </div>
+
+            <!-- Purpose of Payment Table -->
+            <div class="row mb-3">
+                <label class="col-md-2 form-label text-end">PURPOSE OF PAYMENT:</label>
+                <div class="col-md-10 table-container">
+                    <table class="table table-hover table-bordered text-center">
+                        <thead>
+                            <tr>
+                                <th>Charge To</th>
+                                <th>Due Date</th>
+                                <th>Cover Start Date</th>
+                                <th>Cover End Date</th>
+                                <th>OR #</th>
+                                <th>DR #</th>
+                                <th>SI #</th>
+                                <th>PO #</th>
+                                <th>Basic Amt</th>
+                                <th>VAT %</th>
+                                <th>VAT Amount</th>
+                                <th>Gross Amt</th>
+                                <th>WHT %</th>
+                                <th>WHT Amt</th>
+                                <th>Net Amt</th>
+                                <th>Remarks</th>
+                                <th>Type of Charge</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.PoPLists != null)
+                            {
+                                @foreach (var obj in Model.PoPLists)
+                                {
+                                    <tr>
+                                        <td>@obj.ChargeTo</td>
+                                        <td>@((obj.DueDate != null) ? obj.DueDate.Value.ToString("MM/dd/yyyy") : "")</td>
+                                        <td>@obj.CoverStartDate.ToString("MM/dd/yyyy")</td>
+                                        <td>@obj.CoverEndDate.ToString("MM/dd/yyyy")</td>
+                                        <td>@obj.OR_Number</td>
+                                        <td>@obj.DR_Number</td>
+                                        <td>@obj.SI_Number</td>
+                                        <td>@obj.PO_Number</td>
+                                        <td>@Mathify.getBasicAmt(obj.Amount, obj.VATPercent).ToString("N")</td>
+                                        <td>@obj.VATPercent</td>
+                                        <td>@Mathify.getVATAmt(obj.Amount, obj.VATPercent).ToString("N")</td>
+                                        <td>@obj.Amount.ToString("N")</td>
+                                        <td>@obj.WHTPercent</td>
+                                        <td>@Mathify.getWHTAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</td>
+                                        <td>@Mathify.getNETAmt(obj.Amount, obj.VATPercent, obj.WHTPercent).ToString("N")</td>
+                                        <td>@obj.Remarks</td>
+                                        <td>@obj.ToC</td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="17">No Purpose of Payment found.</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Remarks Section -->
+            <div class="row mb-3">
+                <label class="col-md-2 form-label text-end">REMARKS:</label>
+                <div class="col-md-10">
+                    <textarea id="remarks" class="form-control" asp-for="rfpFormx.Remarks" rows="2" readonly></textarea>
+                </div>
+            </div>
+
+            <!-- Amount and Amount in Words -->
+            <div class="row mb-3">
+                @Html.Raw(Model.GeneratedHtml)
+            </div>
+
+            <!-- Checked, Noted, and Approved By -->
+            <div class="row mb-3">
+                <label class="col-md-2 form-label text-end">CHECKED BY:</label>
+                <div class="col-md-2">
+                    <input class="form-control text-uppercase" id="checkP" type="text" asp-for="rfpFormx.Checked" readonly />
+                </div>
+                <label class="col-md-2 form-label text-end">NOTED BY:</label>
+                <div class="col-md-2">
+                    <input class="form-control text-uppercase" id="notedP" type="text" asp-for="rfpFormx.Noted" readonly />
+                </div>
+                <label class="col-md-2 form-label text-end">APPROVED BY:</label>
+                <div class="col-md-2">
+                    <input class="form-control text-uppercase" id="approvedP" type="text" asp-for="rfpFormx.Approved" readonly />
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end pt-3">
+                <button type="submit" class="btn btn-danger" onclick="return confirmArchive()">Archive</button>
+                <a asp-page="/RFP/rfpView" asp-route-id="@Model.rfpFormx.RFP_No" class="btn btn-outline-custom ml-2">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/jquery3.7.1.js"></script>
+    <script src="~/js/select2.min.js"></script>
+    <script src="~/js/confirmation.js"></script>
+}

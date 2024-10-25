@@ -1,0 +1,117 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admStore_ActivateModel
+@{
+    ViewData["Title"] = "Activate Store details";
+}
+
+<div class="container-fluid justify-content-center">
+    <form method="post">
+        <input hidden readonly asp-for="Stores.Id" />
+        <input hidden readonly value="@Model.userDept" id="dept" />
+        <div class="border p-3 mt-4">
+            <div class="row pb-2">
+                <h2 class="text-primary pl-3">Activate Store details</h2>
+                <hr />
+            </div>
+            <div asp-validation-summary="ModelOnly"></div>
+            <div class="mb-3">
+                <label asp-for="Stores.StoreCode"></label>
+                <input asp-for="Stores.StoreCode" class="form-control" type="text" readonly />
+            </div>
+            <!-- Container Store Entity -->
+            <div class="mb-3">
+                <label asp-for="Stores.Entity" for="entity"></label>
+                <input id="entity" asp-for="Stores.Entity" class="form-control" readonly />
+            </div>
+            <!-- Container Store Name -->
+            <div class="mb-3">
+                <label asp-for="Stores.StoreName" for="combineStoreName"></label>
+                <input class="form-control" id="storeNameInput" type="text" readonly hidden />
+                <input class="form-control" asp-for="Stores.StoreName" id="combineStoreName" name="Stores.StoreName" readonly />
+                @*<div class="row">
+                    <div class="col-6"></div>
+                    <div class="col-6"></div>
+                </div>*@
+            </div>
+            <!-- Container Opening Date -->
+            <div class="mb-3">
+                <label asp-for="Stores.OpenDate"></label>
+                <input asp-for="Stores.OpenDate" class="form-control" type="date" readonly />
+                <span asp-validation-for="Stores.OpenDate" class="text-danger"></span>
+            </div>
+            <!-- Container Close Date -->
+            <div class="mb-3">
+                <label asp-for="Stores.CloseDate"></label>
+                <input asp-for="Stores.CloseDate" class="form-control" type="date" readonly />
+                <span asp-validation-for="Stores.CloseDate" class="text-danger"></span>
+            </div>
+
+            <!-- Container for SDWAN edit -->
+            <div id="sdwanEdit">
+                <div class="mb-3">
+                    <label class="switch">
+                        <input type="checkbox" asp-for="Stores.isSDWAN" id="toggleSwitchSDWAN" disabled />
+                        <span class="slider round"></span>
+                    </label>
+                    <label class="form-check-label" for="toggleSwitchSDWAN">uses SD-WAN?</label>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Stores.MRC" for="inputMRC"></label>
+                    <input asp-for="Stores.MRC" class="form-control" id="inputMRC" readonly />
+                    <span asp-validation-for="Stores.MRC" class="text-danger"></span>
+                </div>
+                <!--<div class="mb-3">
+                    <label--> @*asp-for="Stores.inputToolPrice1"*@ <!--for="inputToolPrice1"></label>
+                    <input--> @*asp-for="Stores.inputToolPrice1"*@ <!--class="form-control" id="inputToolPrice1" />
+                    <span--> @*asp-validation-for="Stores.inputToolPrice1"*@ <!--class="text-danger"></span>
+                </div>
+                <div class="mb-3">
+                    <label--> @*asp-for="Stores.inputToolPrice2"*@ <!--for="inputToolPrice2"></label>
+                    <input--> @*asp-for="Stores.inputToolPrice2"*@ <!--class="form-control" id="inputToolPrice2" />
+                    <span--> @*asp-validation-for="Stores.inputToolPrice2"*@ <!--class="text-danger"></span>
+                </div>-->
+            </div>
+
+            <!-- Container for 1003 store additional fields -->
+            <div id="ifcContainer">
+                <!-- Container Store Type -->
+                <div class="mb-3">
+                    <label asp-for="Stores.StoreType"></label>
+                    <input class="form-control" asp-for="Stores.StoreType" readonly />
+                </div>
+                <!-- Container Contract Code -->
+                <div class="mb-3">
+                    <label asp-for="Stores.ContractCode"></label>
+                    <input asp-for="Stores.ContractCode" class="form-control" type="text" readonly />
+                    <span asp-validation-for="Stores.ContractCode" class="text-danger"></span>
+                </div>
+                <!-- Container Business Name -->
+                <div class="mb-3">
+                    <label asp-for="Stores.BusinessName"></label>
+                    <input asp-for="Stores.BusinessName" class="form-control" type="text" readonly />
+                </div>
+                <!-- Container Contract Name -->
+                <div class="mb-3">
+                    <label asp-for="Stores.ContractName"></label>
+                    <input asp-for="Stores.ContractName" class="form-control" type="text" readonly />
+                </div>
+            </div>
+
+            <!-- Container for Toggle switch for Stores Status -->
+            @*<div class="mb-3">
+                <label class="switch">
+                    <input type="checkbox" asp-for="Stores.IsOpen" id="toggleSwitch" disabled />
+                    <span class="slider round"></span>
+                </label>
+                <label class="form-check-label px-3" for="toggleSwitch">Active</label>
+            </div>*@
+            <button type="submit" class="btn btn-primary">Open</button>
+            <a asp-page="/adminSetup/admStore_Index" class="btn btn-outline-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/fetchStoreInfo.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

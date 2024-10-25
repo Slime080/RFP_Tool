@@ -1,0 +1,35 @@
+﻿@page
+@model in_houseLPIWeb.Pages.userLogin.userDeniedModel
+@{
+    ViewData["Title"] = "Error 403: Restricted Page";
+}
+<style>
+    .error-container {
+        display: flex;
+        flex-wrap: wrap;
+        position: fixed;
+        left: 50%;
+        width: 100%;
+        transform: translate(-50%, -50%);
+        text-align: center;  /*Aligns content in the center */
+    }
+    .message {
+        position: absolute;
+        top: 120px; /* Adjust the distance from the top as needed */
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        z-index: 1; /* Ensure message appears below lock */
+    }
+
+</style>
+
+<div class="error-container">
+    <div class="lock"></div>
+    <div class="message">
+        <h1>Access Denied</h1>
+        <p>403 Forbidden Error</p>
+        <p>You don't have access to this page!</p>
+        <p class="small">If you believe this is a mistake, please consult with your officer.</p>
+    </div>
+</div>

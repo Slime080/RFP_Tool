@@ -1,0 +1,56 @@
+﻿h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.table-wrapper {
+    margin-top: 20px;
+    max-height: calc(100vh - 150px); /* Adjust to fit below the navbar */
+    overflow-y: auto; /* Enables vertical scrolling */
+    overflow-x: auto; /* Enables horizontal scrolling */
+    padding: 10px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Ensure the wrapper takes up full width */
+}
+
+table {
+    width: 100%; /* Allow the table to take up full width of the container */
+    border-collapse: collapse;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+    background-color: #5B99C2;
+    color: #fff;
+}
+
+th, td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+    white-space: nowrap; /* Prevents text from wrapping */
+}
+
+th {
+    position: sticky;
+    top: 0;
+    z-index: 10; /* Higher z-index to ensure the header stays above other elements */
+    background-color: #5B99C2; /* Reapply background color to make sure it stays visible */
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.1); /* Add a slight shadow to enhance visibility */
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #fff;
+}
+

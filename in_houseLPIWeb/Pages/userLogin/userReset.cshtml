@@ -1,0 +1,177 @@
+﻿@page
+@model in_houseLPIWeb.Pages.userLogin.userResetModel
+@{
+    ViewData["Title"] = "Reset Password";
+}
+
+<partial name="_Notification" />
+
+<div class="container-fluid d-flex justify-content-center">
+    <div class="border p-3 mt-4" style="width: 50%;">
+        <h2 class="text-primary">Reset Password</h2>
+        <hr />
+        <div id="obtainCode" @(Model.HideCodefields ? "hidden" : "")>
+            <form method="post" asp-page-handler="EmailUser">
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                <div class="mb-3">
+                    <label asp-for="Users.Email" for="emailX"></label>
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <input asp-for="Users.Email" class="form-control" id="emailX"/>
+                            <span asp-validation-for="Users.Email" class="text-danger"></span>
+                        </div>
+                        <div class="col-4 pl-0 text-right">
+                            <button id="emailCode" name="emailCode" type="submit" class="btn btn-primary" style="width: 125px;">Send code</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <form method="post" asp-page-handler="ConfirmCode">
+                <div class="text-danger" asp-validation-summary="ModelOnly"></div>
+                <div class="mb-3">
+                    <label for="enteredCode">Reset Code: </label>
+                    <div class="row align-items-center">
+                        <div class="col-8">
+                            <input id="enteredCode" name="enteredCode" class="form-control" value="" />
+                            <input id="generatedC" name="generatedC" value="@Model.GeneratedCode" class="form-control" readonly hidden />
+                        </div>
+                        <div class="col-4 pl-0 text-right">
+                            <button id="emailedCode" name="emailedCode" type="submit" class="btn btn-outline-info" style="width: 125px;">Confirm code</button>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-outline-secondary" asp-page="/userLogin/Login">Cancel</button>
+                <div hidden>
+                    <input id="userNameQ" name="userNameQ" value="@ViewData["UserName"]" readonly hidden />
+                    <input id="userEmailQ" name="userEmailQ" value="@ViewData["UserEmail"]" readonly hidden />
+                </div>
+            </form>
+        </div>
+        <div id="moreDetails" @(Model.ShowResetPWfields ? "" : "hidden")>
+            <form method="post" asp-page-handler="ResetUser">
+                <!-- Hidden field for confirmation -->
+                <div>
+                    <div class="mb-3">
+                        <label asp-for="Users.Email"></label>
+                        <input value="@Model.userEmail" asp-for="Users.Email" class="form-control" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Users.Name"></label>
+                        <input value="@Model.userName" asp-for="Users.Name" class="form-control" readonly />
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Users.Password" for="pass">New Password</label>
+                        <input asp-for="Users.Password" class="form-control" type="password" id="pass" />
+                        <span asp-validation-for="Users.Password" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirmPassword">Confirm password</label>
+                        <input class="form-control" type="password" id="confirmPassword" name="confirmPassword" />
+                        <span id="passwordMatchWarning" class="text-danger" style="display: none;">Passwords do not match!</span>
+                    </div>
+                </div>
+
+                <button id="resetBtn" type="submit" class="btn btn-primary">Reset</button>
+                <button class="btn btn-outline-secondary" asp-page="/userLogin/Login">Cancel</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@section scripts {
+    <script>
+        var emailInput = document.getElementById('emailX');
+        var btnEmailCode = document.getElementById('emailCode');
+        var codeInput = document.getElementById('enteredCode');
+        var btnConfirmCode = document.getElementById('emailedCode');
+        var passwordInput = document.getElementById('pass');
+        var confirmPasswordInput = document.getElementById('confirmPassword');
+        var passwordMatchWarning = document.getElementById('passwordMatchWarning');
+        var btnReset = document.getElementById('resetBtn');
+
+        // Function to check input of email form and return true or false
+        function checkEmailFormInput() {
+            var email = emailInput.value;
+
+            // Check if email is not empty
+            if (email != "") {
+                // Enable the button in the email form
+                btnEmailCode.disabled = false;
+                return true; // Input is valid
+            } else {
+                // Disable the button in the email form
+                btnEmailCode.disabled = true;
+                return false; // Input is not valid
+            }
+        }
+
+        // Call the Email Input field checker function
+        checkEmailFormInput();
+
+        // Function to check input of code form and return true or false
+        function checkCodeFormInput() {
+            var code = codeInput.value;
+
+            // Check if code is not empty
+            if (code != "") {
+                // Enable the button in the code form
+                btnConfirmCode.disabled = false;
+                return true; // Input is valid
+            } else {
+                // Disable the button in the code form
+                btnConfirmCode.disabled = true;
+                return false; // Input is not valid
+            }
+        }
+
+        // Call the Code Input field checker function
+        checkCodeFormInput();
+
+        // Function to check if passwords match
+        function checkPasswordMatch() {
+            var password = passwordInput.value;
+            var confirmPassword = confirmPasswordInput.value;
+
+            if (password != "" && confirmPassword != "") {
+                if (password === confirmPassword) {
+                    passwordMatchWarning.style.display = 'none'; // Hide the warning if passwords match
+                    btnReset.disabled = false;
+                } else {
+                    passwordMatchWarning.style.display = 'block'; // Show the warning if passwords don't match
+                    btnReset.disabled = true;
+                }
+            } else {
+                passwordMatchWarning.style.display = 'none';
+                btnReset.disabled = false;
+            }
+        }
+
+        passwordInput.addEventListener('input', checkPasswordMatch);
+        confirmPasswordInput.addEventListener('input', checkPasswordMatch);
+        emailInput.addEventListener('input', checkEmailFormInput);
+        codeInput.addEventListener('input', checkCodeFormInput);
+
+        // Add event listener to the button in email form
+        btnEmailCode.addEventListener('click', function (event) {
+            // Perform input validation for email form
+            var isValid = checkEmailFormInput();
+
+            // If validation fails, prevent form submission
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+
+        btnConfirmCode.addEventListener('click', function (event) {
+            // Perform input validation for code form
+            var isValid = checkCodeFormInput();
+
+            // If validation fails, prevent form submission
+            if (!isValid) {
+                event.preventDefault();
+            }
+        });
+    </script>
+    
+}

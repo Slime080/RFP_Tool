@@ -1,0 +1,40 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        /* Font styles */
+        .wild-west {
+            font-family: 'Georgia', serif;
+        }
+
+        .highlight-lawson {
+            color: #1e73be;
+        }
+
+        /* Style for the paragraph */
+        .custom-paragraph {
+            font-family: 'Arial', sans-serif;
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container text-center mt-5">
+        <h1 class="display-4 mb-4">
+            <b><span class="wild-west highlight-lawson">Lawson Philippines Inc.</span></b>
+        </h1>
+        <p class="lead mb-4 custom-paragraph">This website serves as an in-house RFP tool for generating Requests for Payment and managing documents.</p>
+    </div>
+</body>
+</html>

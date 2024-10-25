@@ -1,0 +1,269 @@
+﻿@* Edited by Kurt *@
+@model in_houseLPIWeb.Pages.RFP.rfpEditModel
+<!-- This modal is for Purpose of Payment Form -->
+<link href="~/css/rfpadddialog.css" rel="stylesheet" />
+<script src="/js/rfpEditDialog.js"></script>
+<link rel="stylesheet" href="/wwwroot/css/choices.min.css">
+<script src="/wwwroot/js/choices.min.js"></script>
+
+<div class="modal fade" id="modelModal" tabindex="-1" role="dialog" aria-labelledby="editPoPModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editPoPModalLabel">Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Id:</strong> <span id="modalId">N/A</span></p>
+                <div class="mb-3">
+                    <div class="row">
+
+                        <!-- Container for Types of Charges -->
+                        <div class="col-4">
+                            <label asp-for="PoPListx.ToC" for="ToCq">Type of Charges:</label>
+                        </div>
+                        <div class="col-8">
+                            <select class="form-control py-0" id="ToCq" asp-for="PoPListx.ToC" asp-items="@Model.cbToC">
+                            </select>
+                            <span asp-validation-for="PoPListx.ToC" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <!-- Container for Charge To -->
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-4">
+                                <label asp-for="PoPListx.Entity" for="popEntity">Charge To:</label>
+                            </div>
+                            <div class="col-2 pr-0">
+                                <select id="popEntity" class="form-control p-0" asp-for="PoPListx.Entity" asp-items="@Model.cbEntities">
+                                    <option value="">Select Entity</option> <!-- Optional: Default option -->
+                                </select>
+                            </div>
+                            <div class="col-6 pl-0">
+                                <select id="storeSelect" class="form-control p-0" asp-for="PoPListx.ChargeTo">
+                                    <option value="">Select Store</option> <!-- Optional: Default option -->
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+               <!-- Container for Dates -->
+                <div class="mb-2">
+                    <div class="row align-items-center">
+                        <div class="col-4">
+                            <label for="dueDate">Due Date: <i>(optional)</i></label>
+                        </div>
+                        <div class="col-8">
+                            <input id="dueDate" asp-for="PoPListx.DueDate" type="date" class="form-control" />
+                            <span asp-validation-for="PoPListx.DueDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mb-2" id="billPeriod">
+                    <div class="row mb-2 align-items-center">
+                        <div class="col-4">
+                            <label for="csd">Cover Start Date:</label>
+                        </div>
+                        <div class="col-8">
+                            <input id="coverStartDate" asp-for="PoPListx.CoverStartDate" type="date" class="form-control" />
+                            <span asp-validation-for="PoPListx.CoverStartDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row align-items-center">
+                        <div class="col-4">
+                            <label for="ced">Cover End Date:</label>
+                        </div>
+                        <div class="col-8">
+                            <input id="coverEndDate" asp-for="PoPListx.CoverEndDate" type="date" class="form-control" />
+                            <span asp-validation-for="PoPListx.CoverEndDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+           
+           
+                <!-- Additional fields -->
+                <div class="mb-2">
+                    <label for="orNumber">OR Number:</label>
+                    <input id="orNumber" type="text" class="form-control" />
+                </div>
+                <div class="mb-2">
+                    <label for="drNumber">DR Number:</label>
+                    <input id="drNumber" type="text" class="form-control" />
+                </div>
+                <div class="mb-2">
+                    <label for="siNumber">SI Number:</label>
+                    <input id="siNumber" type="text" class="form-control" />
+                </div>
+                <div class="mb-2">
+                    <label for="serviceInvoice">Service Invoice:</label>
+                    <input id="serviceInvoice" type="text" class="form-control" />
+                </div>
+                <div class="mb-2">
+                    <label for="poNumber">PO Number:</label>
+                    <input id="poNumber" type="text" class="form-control" />
+                </div>
+                <div class="mb-2">
+                    <label for="amount">Amount:</label>
+                    <input id="amount" type="text" class="form-control" />
+                </div>
+                <div class="mb-2">
+                    <label for="remarks">Remarks:</label>
+                    <input id="remarks" type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Initialize Choices.js for dropdowns
+        const popEntityChoices = initializeChoices('popEntity', 'Entity');
+        const storeSelectChoices = initializeChoices('storeSelect', 'Select Store');
+
+        // Function to initialize Choices.js
+        function initializeChoices(elementId, placeholderText) {
+            const element = document.getElementById(elementId);
+            if (element) {
+                return new Choices(element, {
+                    searchEnabled: true,
+                    itemSelectText: '',
+                    placeholder: true,
+                    placeholderValue: placeholderText,
+                    searchFields: ['value'],
+                    shouldSort: false,
+                });
+            }
+            return null;
+        }
+
+        // Function to fetch stores based on selected entity
+        function fetchStoresByEntity() {
+            const entityId = document.getElementById('popEntity').value;
+
+            if (debugElement) {
+                debugElement.textContent = `Pop Entity: ${entityId}`;
+            }
+
+            const url = `/rfpEdit?handler=GetStoresByEntityAsync&entityId=${encodeURIComponent(entityId)}`;
+
+            fetch(url)
+                .then(response => response.json())
+                .then(storeList => {
+                    storeSelectChoices.clearChoices(); // Clear existing choices
+
+                    if (storeList && storeList.length > 0) {
+                        const choices = storeList.map(store => ({
+                            value: store.id, // Ensure this matches the field returned in JSON
+                            label: store.storeName // Ensure this matches the field returned in JSON
+                        }));
+                        storeSelectChoices.setChoices(choices, 'value', 'label', false);
+                    } else {
+                        storeSelectChoices.clearChoices(); // Clear choices if no data
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching store details:', error);
+                });
+        }
+
+        // Event listener for popEntity dropdown change
+        document.getElementById('popEntity').addEventListener('change', fetchStoresByEntity);
+
+        // Initial fetch if the popEntity value is present
+        const initialPopEntityValue = document.getElementById('popEntity').value.trim();
+        if (initialPopEntityValue !== '') {
+            fetchStoresByEntity();
+        }
+
+        // Handle Bootstrap modal show event
+        $('#modelModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget); // Button that triggered the modal
+            var data = button.data('id'); // Extract data from data-id attribute
+
+            if (!data) {
+                console.error('No data found for modal.');
+                return;
+            }
+
+            // Updated to include 'Entity' in the destructured array
+            var [id, entity, chargeTo, toc, dueDate, coverStartDate, coverEndDate, orNumber, drNumber, siNumber, serviceInvoice, poNumber, amount, remarks] = data.split(',');
+
+            // Update the modal's content
+            var modal = $(this);
+            modal.find('#modalId').text(id);
+
+            // Populate the Type of Charges dropdown
+            var tocSelect = modal.find('#ToCq');
+            tocSelect.val(toc).trigger('change');
+
+            // Populate the Entity dropdown
+            var entitySelect = modal.find('#popEntity');
+            entitySelect.val(entity).trigger('change');
+
+            // Populate the Charge To dropdown
+            var chargeToSelect = modal.find('#storeSelect');
+            chargeToSelect.val(chargeTo).trigger('change');
+
+            // Function to format date to yyyy-mm-dd
+            function formatDate(dateString) {
+                if (!dateString) return '';
+                try {
+                    var date = new Date(dateString);
+                    var month = ('0' + (date.getMonth() + 1)).slice(-2);
+                    var day = ('0' + date.getDate()).slice(-2);
+                    var year = date.getFullYear();
+                    return `${year}-${month}-${day}`;
+                } catch (error) {
+                    console.error('Date formatting error:', error);
+                    return '';
+                }
+            }
+
+            // Populate date fields with formatted dates
+            modal.find('#dueDate').val(formatDate(dueDate));
+            modal.find('#coverStartDate').val(formatDate(coverStartDate));
+            modal.find('#coverEndDate').val(formatDate(coverEndDate));
+
+            // Populate other fields
+            modal.find('#orNumber').val(orNumber);
+            modal.find('#drNumber').val(drNumber);
+            modal.find('#siNumber').val(siNumber);
+            modal.find('#serviceInvoice').val(serviceInvoice);
+            modal.find('#poNumber').val(poNumber);
+            modal.find('#amount').val(amount);
+            modal.find('#remarks').val(remarks);
+        });
+
+        // jQuery code for populating storeSelect based on selected popEntity
+        $('#popEntity').change(function () {
+            var selectedEntity = $(this).val();
+            console.log('Selected Entity:', selectedEntity); // Log selected entity
+
+            $.ajax({
+                url: '/rfpEdit?handler=GetStoresByEntityAsync', // Ensure this URL is correct
+                type: 'GET',
+                data: { entityId: selectedEntity },
+                success: function (data) {
+                    console.log('Stores Data:', data); // Log data returned from the server
+
+                    var storeSelect = $('#storeSelect');
+                    storeSelect.empty();
+                    storeSelect.append($('<option></option>').val('').html('Select Store')); // Default option
+
+                    $.each(data, function (index, item) {
+                        storeSelect.append($('<option></option>').val(item.value).html(item.label));
+                    });
+                },
+                error: function (xhr, status, error) {
+                    console.error('AJAX Error:', status, error); // Log errors
+                }
+            });
+        });
+    });
+</script>

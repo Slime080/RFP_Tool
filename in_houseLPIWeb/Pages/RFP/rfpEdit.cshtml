@@ -1,0 +1,176 @@
+﻿@* Edited by Kurt *@
+@page
+@model in_houseLPIWeb.Pages.RFP.rfpEditModel
+
+@{
+    string formattedRFP_No = $"LAWHO-{Model.rfpNo + 1000000}";
+    ViewData["Title"] = "Edit Request of Payment - " + formattedRFP_No;
+   
+}
+
+<link href="~/css/rfp.css" rel="stylesheet" />
+<partial name="_Notification" />
+
+@* <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Initialize Choices.js on the Type of Charges dropdown
+        
+    });
+</script> *@
+<div class="container-fluid px-0">
+    <h2 class="text-center">Request For Payment Edit</h2>
+
+    <div class="container-fluid pt-1">
+        <form method="post" enctype="multipart/form-data" asp-page-handler="EditRFP">
+            <input class="form-control py-0" asp-for="rfpFormx.CreatedDate" readonly hidden />
+            <input class="form-control py-0" name="createdBy" asp-for="rfpFormx.CreatedBy" readonly hidden />
+            <div class="left-aligned-form mt-4 bg-light p-4 border border-secondary rounded shadow-sm">
+                <h2 class="mb-4">Payment Form</h2>
+
+                <div class="row mb-2">
+                    <div class="col-md-2">
+                        <label for="rfpNo" class="font-weight-bold">RFP NO:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input class="form-control form-control-sm" asp-for="rfpFormx.RFP_No" id="rfpNo" readonly hidden />
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-md-2">
+                        <label for="Payee" class="font-weight-bold">PAYEE:</label>
+                    </div>
+                    <div class="col-md-3" style="position: relative;">
+                        <select class="form-control form-control-sm text-uppercase" id="Payee" asp-for="rfpFormx.Payee" asp-items="@Model.cbPayees" style="position: relative; z-index: 1000;">
+                            <option value=""></option>
+                        </select>
+                        <span asp-validation-for="rfpFormx.Payee" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="DueDate" class="font-weight-bold">DUE DATE:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <input asp-for="rfpFormx.DueDate" type="date" class="form-control form-control-sm" />
+                        <span asp-validation-for="rfpFormx.DueDate" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-2">
+                    <div class="col-md-2">
+                        <label for="MoP" class="font-weight-bold">MODE OF PAYMENT:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control form-control-sm" id="MoP" asp-for="rfpFormx.MoP" asp-items="@Model.cbMoPs">
+                        </select>
+                        <span asp-validation-for="rfpFormx.MoP" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="ToP" class="font-weight-bold">TYPE OF PAYMENT:</label>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-control form-control-sm" id="ToP" asp-for="rfpFormx.ToP">
+                            <option value="FULL">FULL</option>
+                            <option value="PARTIAL">PARTIAL</option>
+                        </select>
+                        <span asp-validation-for="rfpFormx.ToP" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row mb-4">
+                    <div class="col-md-2">
+                        <label for="PopCode" class="font-weight-bold">PURPOSE OF PAYMENT:</label>
+                    </div>
+                    <div class="col-6 px-0">
+                        <input class="form-control" type="text" id="PopCode" asp-for="rfpFormx.PoPCode" readonly hidden>
+                        <div class="col-md-3">
+                            <button data-toggle="modal" data-target="#editPoPModal" type="button" class="btn btn-outline-primary btn-sm" style="width: 250px;">Add Purpose of Payment</button>
+             
+                        </div>
+                    </div>
+                </div>
+            <div class="align-items-center pb-2">
+                <div class="container-fluid overflow-auto" id="dynamicContent" style="height: 300px; overflow-y: auto;">
+                    <div>
+                        @Html.Raw(Model.GeneratedPoPTBHtml)
+                    </div>
+                </div>
+            </div>
+            </div>
+            <div class="bg-light p-3 ms-2 border border-secondary rounded-3 shadow-sm mt-4">
+                <div id="secAmt">
+                    <div>
+                        @Html.Raw(Model.GeneratedAmountWordHtml)
+                    </div>
+                </div>
+           
+                <div class="row align-items-center pb-2">
+                    <div class="col-2 px-0">
+                        <p class="text-right my-2 pr-1" style="margin-top:8px;"><b>CHECKED BY:</b></p>
+                    </div>
+                    <div class="col-2 px-0">
+                        <input class="form-control py-0 text-uppercase" type="text" id="checked" asp-for="rfpFormx.Checked" />
+                        <span asp-validation-for="rfpFormx.Checked" class="text-danger"></span>
+                    </div>
+                    <div class="col-2 px-0">
+                        <p class="text-right my-2 pr-1" style="margin-top:8px;"><b>NOTED BY:</b></p>
+                    </div>
+                    <div class="col-2 px-0">
+                        <input class="form-control py-0 text-uppercase" type="text" id="noted" asp-for="rfpFormx.Noted" />
+                        <span asp-validation-for="rfpFormx.Noted" class="text-danger"></span>
+                    </div>
+                    <div class="col-2 px-0">
+                        <p class="text-right my-2 pr-1" style="margin-top:8px;"><b>APPROVED BY:</b></p>
+                    </div>
+                    <div class="col-2 px-0">
+                        <input class="form-control py-0 text-uppercase" type="text" id="approved" asp-for="rfpFormx.Approved" />
+                        <span asp-validation-for="rfpFormx.Approved" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row align-items-center">
+                    <div class="col-2 px-0">
+                        <div class="align-self-end">
+                            <p class="text-right my-2 pr-1" style="margin-top:8px;"><b>REMARKS:</b></p>
+                        </div>
+                    </div>
+                    <div class="col-6 px-0">
+                        <textarea id="remarks" class="form-control py-0" asp-for="rfpFormx.Remarks" rows="2" placeholder="Use this section for any optional remarks, notes, or special instructions related to the RFP."></textarea>
+                    </div>
+            
+                        <span asp-validation-for="rfpFormx.CreatedBy" class="text-danger"></span>
+                    <div class="d-grid gap-2 d-md-block text-right pt-2 pl-5">
+                        <button type="submit" id="saveButtonE"  class="btn btn-primary">Save</button>
+                            <a asp-page="/RFP/rfpView" asp-route-id="@Model.rfpNo" class="btn btn-outline-info">Cancel</a>
+                        </div>
+                   
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<section Scripts>
+    @{
+            <partial name="_ValidationScriptsPartial" />
+    }
+</section>
+
+<div>
+    @await Html.PartialAsync("rfpEditDialog_", ViewData)
+</div>
+<script>
+    function refreshPage() {
+    setTimeout(function () {
+        window.location.reload();
+    }, 0); // First reload immediately
+    setTimeout(function () {
+        window.location.reload();
+    }, 100); // Second reload after a short delay
+
+}
+</script>
+
+<script src="~/js/fetchchargepopedit.js"></script>
+<script defer src="~/js/functionHandler.js"></script>
+<script defer src="~/js/taxFunction.js"></script>
+<script src="~/js/confirmation.js"></script>
+

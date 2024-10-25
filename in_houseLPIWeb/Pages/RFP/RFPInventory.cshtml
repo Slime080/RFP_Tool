@@ -1,0 +1,152 @@
+﻿@page
+@model in_houseLPIWeb.Pages.RFP.RFPInventoryModel
+@using in_houseLPIWeb.Utilities
+<link href="~/css/rfp_extraction.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet" />
+<div>
+    <h2 class="align-self-sm-center" style="color:#295F98; background-color: #D1E9F6; padding: 20px 40px; border-radius: 50px; max-width: 400px; margin: 0 auto;margin-top: 20px;">
+        <b>RFP Extraction</b>
+    </h2>
+</div>
+<div style="background-color: #D1E9F6; padding: 20px; border-radius: 5px;">
+    <div style="display: flex;">
+        <p style="margin: 0; padding-left: 70px; font-weight: bold; font-size:40px">STATUS</p>
+        @* <p style="margin: 0; padding-left: 80px; font-weight: bold;">Lock Status</p> *@
+    </div>
+
+    <div style="margin-bottom: 20px;">
+        <label for="statusOpen" style="margin-left: 70px;">
+            <input type="checkbox" id="statusOpen" onclick="filterTable()" checked> Open
+        </label>
+
+        <label for="statusClosed" style="margin-left: 30px;">
+            <input type="checkbox" id="statusClosed" onclick="filterTable()" checked> Closed
+        </label>
+        <label for="lockLocked" style="margin-left: 20px; display: none;">
+            <input type="checkbox" id="lockLocked" onclick="filterTable()" checked> Locked
+        </label>
+        <label for="lockUnlocked" style="margin-left: 10px; display: none;">
+            <input type="checkbox" id="lockUnlocked" onclick="filterTable()"> Unlocked
+        </label>
+    </div>
+    <div style="display: flex; width:auto;margin-bottom: 20px;">
+        <label for="searchInput" style="margin-right: 10px; font-weight: bold;">Search:</label>
+        <input type="text" id="searchInput" placeholder="Search by RFP No" style="padding: 10px; border-radius: 5px; border: 1px solid #ccc; width: 250px; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);">
+    </div>
+<!-- Container with horizontal scrolling -->
+<div class="table-wrapper" style="margin-top: 20px; max-height: calc(100vh - 150px); overflow-y: auto; padding: 10px; background-color: #f8f9fa; border-radius: 4px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); width: 100%;">
+    <table id="rfpTable"  style="width: 100%; border-collapse: collapse; background-color: #fff; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);">
+        <thead style="background-color: #5B99C2; color: #fff; position: sticky; top: 0; z-index: 10;">
+            <tr>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">RFP No</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Entity</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Charge To</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">ToC</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Cover Start Date</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Cover End Date</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">OR #</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">DR #</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">SI # / Service #</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">PO Number</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Basic Amt</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">VAT %</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">VAT Amount</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Gross Amt</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">WHT %</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">WHT Amt</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Net Amt</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Is Active</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Voucher</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Approved Date</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Last Settle Voucher</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Closed</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Status</th>
+                <th style="padding: 10px; text-align: left; border-bottom: 1px solid #ccc; white-space: nowrap; position: sticky; top: 0; z-index: 10;">Lock_Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.RfpDataList)
+            {
+                <tr>
+                    <td>@item.RFP_No</td>
+                    <td>@item.Entity</td>
+                    <td>@item.ChargeTo</td>
+                    <td>@item.ToC</td>
+                    <td>@item.CoverStartDate.ToString("MM/dd/yyyy")</td>
+                    <td>@item.CoverEndDate.ToString("MM/dd/yyyy")</td>
+                    <td>@item.OR_Number</td>
+                    <td>@item.DR_Number</td>
+                    <td>@item.SI_Number</td>
+                    <td>@item.PO_Number</td>
+                    <td><i>@Mathify.getBasicAmt(@item.Amount, @item.VATPercent).ToString("N")</i></td>
+                    <td>@item.VATPercent%</td>
+                    <td><i>@Mathify.getVATAmt(@item.Amount, @item.VATPercent).ToString("N")</i></td>
+                    <td>@item.Amount</td>
+                    <td><i>@item.WHTPercent</i></td>
+                    <td><i>@Mathify.getWHTAmt(@item.Amount, @item.VATPercent, @item.WHTPercent).ToString("N")</i></td>
+                    <td><i>@Mathify.getNETAmt(@item.Amount, @item.VATPercent, @item.WHTPercent).ToString("N")</i></td>
+                    <td>@item.IsActive</td>
+                    <td>@item.Voucher</td>
+                    <td>@item.ApprovedDate</td>
+                    <td>@item.LastSettleVoucher</td>
+                    <td>@item.Closed</td>
+                    <td>@item.Status</td>
+                    <td>@item.Lock_Status</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+</div>
+ <script>
+  function filterTable() {
+    var input = document.getElementById("searchInput").value.toLowerCase();
+    var table = document.getElementById("rfpTable");
+    var rows = table.getElementsByTagName("tr");
+
+    var statusOpenChecked = document.getElementById("statusOpen").checked;
+    var statusClosedChecked = document.getElementById("statusClosed").checked;
+    var lockLockedChecked = document.getElementById("lockLocked").checked;
+    var lockUnlockedChecked = document.getElementById("lockUnlocked").checked;
+
+    // Loop through each row (excluding the header)
+    for (var i = 1; i < rows.length; i++) {
+        var cells = rows[i].getElementsByTagName("td");
+        var status = cells[22].textContent; // Adjust based on your table structure
+        var lockStatus = cells[21].textContent; // Adjust based on your table structure
+
+        // Check if the row matches the search input
+        var matchesSearch = cells[0].textContent.toLowerCase().includes(input) ||
+            cells[1].textContent.toLowerCase().includes(input) ||
+            cells[2].textContent.toLowerCase().includes(input); // Adjust based on your columns
+
+        // Check the status filters
+        var matchesStatus =
+            (statusOpenChecked && status.trim() === "Open") ||
+            (statusClosedChecked && status.trim() === "Closed");
+
+        // Check the lock status filters
+        var matchesLockStatus =
+            (lockLockedChecked && lockStatus.trim() === "Lock") ||
+            (lockUnlockedChecked && lockStatus.trim() === "Unlock");
+
+        // Determine if the row should be displayed
+        if (matchesSearch && (matchesStatus || matchesLockStatus)) {
+            rows[i].style.display = "";
+        } else if (matchesSearch && !lockLockedChecked && !lockUnlockedChecked && !statusOpenChecked && !statusClosedChecked) {
+            // If no checkboxes are checked, show the row if it matches the search
+            rows[i].style.display = "";
+        } else {
+            rows[i].style.display = "none";
+        }
+    }
+}
+
+document.getElementById("searchInput").addEventListener("keyup", filterTable);
+document.getElementById("statusOpen").addEventListener("change", filterTable);
+document.getElementById("statusClosed").addEventListener("change", filterTable);
+document.getElementById("lockLocked").addEventListener("change", filterTable);
+document.getElementById("lockUnlocked").addEventListener("change", filterTable);
+</script>
+
+@*  <script src="~/js/rfp_extraction.js"></script> *@

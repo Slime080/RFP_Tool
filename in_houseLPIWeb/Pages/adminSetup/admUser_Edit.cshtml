@@ -1,0 +1,66 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admUser_EditModel
+@{
+    ViewData["Title"] = "Edit User details";
+}
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary pl-3">Edit User</h2>
+            <hr />
+        </div>
+        <input asp-for="Users.Id" hidden />
+        <div asp-validation-summary="All"></div>
+        <div class="mb-3">
+            <label asp-for="Users.Email"></label>
+            <input readonly asp-for="Users.Email" class="form-control" />
+            <span asp-validation-for="Users.Email" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Users.Name"></label>
+            <input readonly asp-for="Users.Name" class="form-control" />
+            <span asp-validation-for="Users.Name" class="text-danger"></span>
+        </div>
+        @if (Model.userRole == "0")
+        {
+            <div class="mb-3">
+                <label asp-for="Users.Department" for="departmentDropdown">Department</label>
+                <select id="departmentDropdown" name="dept_name" asp-for="Users.Department" asp-items="@Model.Departments" class="form-control">
+                </select>
+                <span asp-validation-for="Users.Department" class="text-danger"></span>
+            </div>
+        }
+        else
+        {
+            <div class="mb-3">
+                <label asp-for="Users.Department">Department</label>
+                <select name="dept_name" asp-for="Users.Department" asp-items="@Model.Departments" class="form-control" disabled>
+                </select>
+                <span asp-validation-for="Users.Department" class="text-danger"></span>
+            </div>
+        }
+
+        <div class="mb-3">
+            <label asp-for="Users.UserLevel" for="userLevelDropdown"></label>
+            <select id="userLevelDropdown" asp-for="Users.UserLevel" asp-items="@Model.Roles" class="form-control">
+            </select>
+            <span asp-validation-for="Users.UserLevel" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="switch">
+                <input type="checkbox" asp-for="Users.isActive" id="toggleSwitch" readonly>
+                <span class="slider round"></span>
+            </label>
+            <label class="form-check-label" for="toggleSwitch">Active</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:150px;">Update</button>
+        <a asp-page="/adminSetup/admUser_Index" class="btn btn-outline-secondary" style="width:150px;">Cancel</a>
+    </div>
+</form>
+
+@section Scripts {
+    <script src="~/js/fetchUserLevel.js"></script>
+}

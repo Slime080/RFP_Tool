@@ -1,0 +1,70 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admRFPPayee_IndexModel
+@{
+    ViewData["Title"] = "Payee Index";
+}
+
+<partial name="_Notification" />
+
+<div class="container-fluid">
+    @{ ViewData["menuId"] = "rfpUtilMenu"; }
+    @await Html.PartialAsync("_PartialMenuView")
+</div>
+
+<div class="container-fluid">
+    <div class="row pt-3">
+        <div class="col-6">
+            <h2 class="text-primary">Payee List</h2>
+        </div>
+        <div class="col-6 text-right">
+            <button class="btn btn-primary mx-2" data-toggle="modal" data-target="#addPayeeModal">Add New Payee</button>
+        </div>
+    </div>
+    <table class="table table-bordered table-striped table-hover" id="payeeTable">
+        <thead>
+            <tr>
+                <th>
+                    Payee Name
+                </th>
+                <th>
+                    Active Payee
+                </th>
+                <th>
+                    Operation Controls
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var obj in Model.PayeeList)
+            {
+                <tr>
+                    <td width="70%">@obj.PayeeName</td>
+                    <td width="15%">@(obj.IsActive ? "Yes" : "No")</td>
+                    <td width="15%">
+                        <div class="d-grid gap-2 d-md-block text-center">
+                            <a asp-page="/adminSetup/admRFPPayee_Edit" asp-route-id="@obj.Id" class="btn btn-outline-info @(Model.payeeEditAccess ? "" : "disabled")">Edit</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <partial name="admRFPPayee_Add_" />
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $('#payeeTable').DataTable({
+                "initComplete": function (settings, json) {
+                    $('.dataTables_filter input').attr('id', 'search-input');
+                }
+            });
+        });
+    </script>
+
+    @*@{
+        <partial name="_ValidationScriptsPartial" />
+    }*@
+} <!-- Used to add the _ValidationScriptsPartial.cshtml -->

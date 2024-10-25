@@ -1,0 +1,29 @@
+﻿@page
+@model in_houseLPIWeb.Pages.adminSetup.admUserDep_ArchiveModel
+@{
+    ViewData["Title"] = "Deactivate Department";
+}
+
+<form method="post">
+    <div class="border p-3 mt-4">
+        <div class="row pb-2">
+            <h2 class="text-primary pl-3">Deactivate Department</h2>
+            <hr />
+        </div>
+        <input asp-for="Departmentx.Id" class="form-control" hidden />
+        <div asp-validation-summary="All"></div>
+        <div class="mb-3">
+            <label asp-for="Departmentx.DeptName"></label>
+            <input readonly asp-for="Departmentx.DeptName" class="form-control" />
+            <span asp-validation-for="Departmentx.DeptName" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="Departmentx.DeptHead"></label>
+            <input readonly asp-for="Departmentx.DeptHead" class="form-control" />
+            <span asp-validation-for="Departmentx.DeptHead" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-danger" style="width:150px;">Deactivate</button>
+        <a asp-page="/adminSetup/admUserDep_Index" class="btn btn-outline-secondary" style="width:150px;">Cancel</a>
+    </div>
+</form>
